@@ -1,0 +1,106 @@
+{
+    "EXPORT_STORE":{
+        
+        "HANDLE_EVEN_IF_STOP":true,
+        "MAX_TO_SEND":700,
+        "BUF_MAX_LEN":300,
+        "PERIOD":100000,
+        "DELAY":4000,
+        "SCOPE":[
+            {"id":"1","domain":"http://localhost:7777","sid":"KvwfMz+4gWXewNrnSS+PJ2pzGDTdwwPmLI7Nc8gUyY7Z20yZgekstvbmXktSS3AW8iBDl2ErnhfgzDSwSF3IBw=="},
+            {"id":"1","domain":"http://zeronode.io:7777","sid":"SOME_SID"}
+        ]
+    
+    },
+
+    "EXPORT_BRANCHCOMS":{
+
+        "HANDLE_EVEN_IF_STOP":true,
+        "MAX_TO_SEND":700,
+        "BUF_MAX_LEN":300,
+        "PERIOD":100000,
+        "DELAY":3000,
+            "SCOPE":[
+            {"id":"1","domain":"http://localhost:7777","sid":"KvwfMz+4gWXewNrnSS+PJ2pzGDTdwwPmLI7Nc8gUyY7Z20yZgekstvbmXktSS3AW8iBDl2ErnhfgzDSwSF3IBw=="},
+            {"id":"1","domain":"http://zeronode.io:7777","sid":"SOME_SID"}
+        ]
+    
+    
+    },
+    
+    "EXPORT_EMP_NEWS":{
+    
+        "MAX_BUFS_PER_TOPIC":{
+            "football":3,
+            "basketball":3
+        },
+        "PERIOD":600000,
+        "TOPICS":["football","basketball"],
+        "DELAY":15000,
+        "SCOPE":[
+            {"id":"1","domain":"http://localhost:7777","sid":"KvwfMz+4gWXewNrnSS+PJ2pzGDTdwwPmLI7Nc8gUyY7Z20yZgekstvbmXktSS3AW8iBDl2ErnhfgzDSwSF3IBw=="},
+            {"id":"1","domain":"http://zeronode.io:7777","sid":"SOME_SID"}
+        ]
+    
+    },
+
+    "EXPORT_ANY_NEWS":{
+    
+        "MAX_BUFS_PER_TOPIC":{
+            "future":3,
+            "other":3
+        },
+        "PERIOD":100000,
+        "TOPICS":["future","other"],
+        "DELAY":6000,
+        "SCOPE":[
+            {"id":"1","domain":"http://localhost:7777","sid":"KvwfMz+4gWXewNrnSS+PJ2pzGDTdwwPmLI7Nc8gUyY7Z20yZgekstvbmXktSS3AW8iBDl2ErnhfgzDSwSF3IBw=="},
+            {"id":"1","domain":"http://zeronode.io:7777","sid":"SOME_SID"}
+        ]
+
+    },
+
+
+
+
+    "IMPORT_ANY_NEWS":{
+    
+        "PAYLOAD":1000000,
+        "MAX_IMPORT":100000,
+        "SCOPE":{"1":{"sid":"KvwfMz+4gWXewNrnSS+PJ2pzGDTdwwPmLI7Nc8gUyY7Z20yZgekstvbmXktSS3AW8iBDl2ErnhfgzDSwSF3IBw=="}}
+    
+    },
+
+    "IMPORT_EMP_NEWS":{
+    
+        "PAYLOAD":1000000,
+        "MAX_IMPORT":100000,
+        "SCOPE":{"1":{"sid":"KvwfMz+4gWXewNrnSS+PJ2pzGDTdwwPmLI7Nc8gUyY7Z20yZgekstvbmXktSS3AW8iBDl2ErnhfgzDSwSF3IBw=="}}
+    },
+
+    "IMPORT_BRANCHCOMS":{
+        
+        "PAYLOAD":1000000,
+        "MAX_IMPORT":100000,
+        "SCOPE":{"1":{"sid":"KvwfMz+4gWXewNrnSS+PJ2pzGDTdwwPmLI7Nc8gUyY7Z20yZgekstvbmXktSS3AW8iBDl2ErnhfgzDSwSF3IBw=="}}
+    
+    },
+
+    "IMPORT_STORE":{
+    
+        "PAYLOAD":1000000,
+        "MAX_IMPORT":100000,
+        "SCOPE":{"1":{"sid":"KvwfMz+4gWXewNrnSS+PJ2pzGDTdwwPmLI7Nc8gUyY7Z20yZgekstvbmXktSS3AW8iBDl2ErnhfgzDSwSF3IBw=="}}
+    
+    },
+
+
+
+    "EMPIRE":{
+
+        "START":true,
+        "TOPICS":["football","basketball","hacktivity","baseball","crypto","olympiad","fifa","dunk_contest"]
+
+    }
+
+}

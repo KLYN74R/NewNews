@@ -1,0 +1,11 @@
+build
+.vscode
+.idea
+node_modules
+*.txt
+E
+M
+A
+
+# Workflow files
+note.js

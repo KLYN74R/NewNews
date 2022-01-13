@@ -1,0 +1,157 @@
+{
+    "ALIASES":{
+        "q0Bl2spIOIBhA5pviv6B69RdBcZls7iy+y4Wc3tgSVs=":"\u001b[0m\u001b[31m@@@@@@@@@@@@@@@@@@@\u001b[0m\u001b[30;1mkNULL\u001b[0m\u001b[31m@@@@@@@@@@@@@@@@@@@@\u001b[0m",
+        "DJBTwMSwyw/Zv3ct3cO83qFc6xWfWmd6+Rpfmy1rJho=":"\u001b[38;5;124m≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈|\u001b[37mCARNAGE\u001b[38;5;124m|≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈\u001b[0m",
+        "TESTNET":"\u001b[37m<<<<<<<<<<<<<\u001b[30;1m---[\u001b[38;5;202mANTI-VENOM\u001b[30;1m]---\u001b[37m>>>>>>>>>>>>>\u001b[0m"
+    },
+
+    "ANIMATION_DURATION":1000,
+
+    "TYPES_PREFIXES":{
+        "0":"connectors",
+        "1":"contracts"
+    },
+
+
+    "CACHES":{
+        
+        "NEWS":{
+            "SIZE":1000000,
+            "TTL":900000,
+            "FLUSH_LIMIT":50000,
+            "DELAY":30000
+        },
+        "BRANCHCOMS":{
+            "SIZE":1000000,
+            "TTL":900000,
+            "FLUSH_LIMIT":50000,
+            "DELAY":60000
+        },
+        "STORE":{
+            "SIZE":1000000,
+            "TTL":900000,
+            "FLUSH_LIMIT":50000,
+            "DELAY":150000
+        },
+        "ACCOUNTS":{
+            "SIZE":1000000,
+            "TTL":900000,
+            "FLUSH_LIMIT":50000,
+            "DELAY":240000
+        }
+
+    },
+
+
+    "TTL":{
+        "DEZ":600,
+        "STORE":600,
+        "ANY":600,
+        "EMP":600,
+        "INFO":600,
+        "BRANCHES":600
+    },
+
+    "TRIGGERS":{
+        
+        "GET_BRANCHCOMS":1,
+        "OPEN_BC":1,
+        "COMMENT_BC":1,
+
+        "GET_STORE":1,
+        "STORE1":1,
+        "STORE2":1,
+        
+        "GET_ANY_NEWS":1,
+        "GET_EMP_NEWS":1,
+        
+        "SEND_ANY_NEWS":1,
+        "SEND_EMP_NEWS":1,
+        
+        "SEND_EMP_NEWS_LIST":1,
+        "SEND_ANY_NEWS_LIST":1,
+        
+        "SET_ONE_SRC":1,
+        
+        "ENTRY_NEWBIES":1,
+        
+        "START_SPACE_ID":1,
+        
+
+        "IMPORT_BRANCHCOMS":1,
+        "IMPORT_STORE":1,
+        "IMPORT_ANY_NEWS":1,
+        "IMPORT_EMP_NEWS":1,
+
+        "EXPORT_STORE":1,
+        "EXPORT_ANY_NEWS":1,
+        "EXPORT_EMP_NEWS":1,
+        "EXPORT_BRANCHCOMS":1
+    },
+
+
+    "DEBOUNCE_TIME":20000,
+    "DEBOUNCE_MODULUS":1000,
+    
+    "PAYLOAD_SIZE":1000,
+    "EXTENDED_PAYLOAD_SIZE":10000,
+    "MAX_PAYLOAD_SIZE":10000000,
+
+    "ENABLE_LOGS":true,
+
+    "CONTRACTS_PER_ADDRESS":3,
+    "SNAPSHOT_PERIOD":60000,
+    
+    "CHANGE_PROCEDURE":[
+        {
+            "2dtMmYHpLLb25l5LUktwFvIgQ5dhK54X4Mw0sEhdyAc=SomeAddr":{
+                "domain":"https://forchproc.com",
+                "sid":"someSID"
+            }
+        
+        }
+    ],
+
+    "INFORM_WHEN_SPACE_CHANGE":false,
+
+
+     "INFO":{
+        "TOPICS":"football,basketball,hacktivity,baseball,crypto,olympiad,fifa,dunk_contest",
+        "EMPIRE_PUBLIC":"some.com,onemore.io,sameinterest.news",
+        "CONTACT":"@:node@example.com,tg:@someuser,inst:@user",
+        "ANY_NEWS_PREV_HREF_LEN":400,
+        "EMP_NEWS_PREV_HREF_LEN":400,
+        "STORE1_HREF_LEN":100,
+        "STORE2_INPUT_LEN":800,
+        "STORE2_REFS_LEN":500,
+        "GET_ANY_NEWS":"^newnews.com,westbc.io,nnbrother.ua",
+        "SEND_ANY_NEWS":"^newnews.com,westbc.io,nnbrother.ua",
+        "GET_IE_NEWS":"^newnews.com,westbc.io,nnbrother.ua",
+        "SEND_IE_NEWS":"^newnews.com,westbc.io,nnbrother.ua",
+        "GET_BRANCHCOMS":"^newnews.com,westbc.io,nnbrother.ua",
+        "SEND_BRANCHCOMS":"^newnews.com,westbc.io,nnbrother.ua",
+        "GET_STORE":"^newnews.com,westbc.io,nnbrother.ua",
+        "SEND_STORE":"^newnews.com,westbc.io,nnbrother.ua",
+        "GET_DEZCA":"^newnews.com,westbc.io,nnbrother.ua",
+        "SEND_DEZCA":"^newnews.com,westbc.io,nnbrother.ua",
+        "DEBOUNCE_TIME":20000,
+        "SYMBIOTES":"kNULL,CARNAGE"
+    },
+
+
+    "START_SID_EVERYONE":true,
+    "DEFAULT_ROLES":"",
+
+
+    "HOSTCHAINS_PROVIDERS":{
+        
+        "xrp":"wss://s.altnet.rippletest.net:51233",
+        "trx":"https://api.shasta.trongrid.io"
+
+    },
+
+    
+    "EVM":["bsc","eth","celo","arbitrum","avax","ftm","heco","matic","one","rsk","sys"],
+    "BITFORKS":["btc","ltc","doge","dash"]
+
+}

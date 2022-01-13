@@ -1,0 +1,11 @@
+{
+    "GALAXY":0,
+    "ROLE":"NN",
+
+    "INTERFACE":"0.0.0.0",
+    "PORT":7777,
+    
+    "CONTROL_SID":"KvwfMz+4gWXewNrnSS+PJ2pzGDTdwwPmLI7Nc8gUyY7Z20yZgekstvbmXktSS3AW8iBDl2ErnhfgzDSwSF3IBw==",
+    "CONTROL_PUB_KEY":"DJBTwMSwyw/Zv3ct3cO83qFc6xWfWmd6+Rpfmy1rJho=",
+    "2FA":false
+}

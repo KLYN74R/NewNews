@@ -1,0 +1,36 @@
+{
+  "name": "newnews",
+  "version": "1.0.0",
+  "description": "NewNews-spacewide media project build using abilities of Klyntar",
+  "main": "nn.js",
+  "type":"module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin":{
+    "nn":"nn.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KLYN74R/NewNews.git"
+  },
+  "keywords": [
+    "news",
+    "media",
+    "klyntar"
+  ],
+  "author": "KlyntarTeam",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KLYN74R/NewNews/issues"
+  },
+  "homepage": "https://github.com/KLYN74R/NewNews#readme",
+  "dependencies": {
+    "chalk-animation": "^1.6.0",
+    "cli-spinners": "^2.6.1",
+    "level": "^7.0.1",
+    "node-fetch": "^3.1.0",
+    "ora": "^6.0.1",
+    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.3.0"
+  }
+}
