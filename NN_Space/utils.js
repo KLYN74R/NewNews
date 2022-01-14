@@ -148,26 +148,6 @@ SIG=(data,prv)=>new Promise((resolve,reject)=>
 HMAC=(data,sid,magic,fullHash)=>BLAKE3(data+sid+magic)===fullHash,
 
 
-
-
-/**@return Chain level data.Used when we check blocks
- * Here we read from cache or get account from state,push to cache and return
-*/
-GET_CHAIN_ACC=(addr,chain)=>
-
-    //We get from db only first time-the other attempts will be gotten from ACCOUNTS
-    chains.get(chain).ACCOUNTS.get(addr)||chains.get(chain).STATE.get(addr)
-    
-    .then(ACCOUNT=>
-        
-        //Get and push to cache
-        chains.get(chain).ACCOUNTS.set(addr,{ACCOUNT,NS:new Set(),ND:new Set(),OUT:ACCOUNT.B}).get(addr)
-    
-    ).catch(e=>false),
-
-
-
-
 //Advanced function which also check limits(useful in routes where we accept relatively small data chunks not to paste payload size checker in each handler)
 BODY=(bytes,limit)=>new Promise(r=>r(bytes.byteLength<=limit&&JSON.parse(Buffer.from(bytes)))).catch(e=>false),
 
@@ -257,30 +237,6 @@ LOG=(msg,type)=>CONFIG.ENABLE_LOGS&&console.log(COLORS.T,`[${new Date().toLocale
 
 
 
-//Function just for pretty output about information on chains
-BLOCKLOG=(msg,type,chain,hash,spaces,color)=>{
-
-    if(CONFIG.CHAINS[chain].LOGS.BLOCK){
-
-        chain=CHAIN_LABEL(chain)
-
-        console.log(' '.repeat(spaces),color,'_'.repeat(74))
-
-        console.log(' '.repeat(spaces),'│\x1b[33m  CHAIN:\x1b[36;1m',chain,COLORS.C,' '.repeat(19)+`${color}│`)
-    
-        console.log(COLORS.T,`[${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}]`,COLORS[type],msg,COLORS.C,' '.repeat(71),`${color}│`)
-    
-        console.log(' '.repeat(spaces),'│\x1b[33m  HASH:\x1b[36;1m',hash,COLORS.C,`${color}│`)
-
-        console.log(' '.repeat(spaces),' ‾'+'‾'.repeat(73),COLORS.C)
-    
-    }
-
-},
-
-
-
-
 DECRYPT_KEYS=async(chain,spinner)=>{
 
     let chainRef=CONFIG.CHAINS[chain],
@@ -346,44 +302,6 @@ DECRYPT_KEYS=async(chain,spinner)=>{
     rl.close()
 
 },
-
-
-
-
-GET_NODES=(chain,region)=>{
-
-    let nodes=CONFIG.CHAINS[chain].NODES[region]//define "IN SCOPE"(due to region and chain)
-
-    //Default Phisher_Yeits algorithm
-
-    if(nodes){
-        
-        let shuffled = nodes.slice(0),
-        
-            arrSize = nodes.length,
-        
-            min = arrSize - CONFIG.CHAINS[chain].NODES_PORTION, temp, index
-
-
-        while (arrSize-- > min) {
-
-            index = Math.floor((arrSize + 1) * Math.random())
-        
-            //Destructurisation doesn't work,so use temporary variable
-            temp = shuffled[index]
-        
-            shuffled[index] = shuffled[arrSize]
-        
-            shuffled[arrSize] = temp
-
-        }
-    
-        return shuffled.slice(min)
-    
-    }else return []
-    
-},
-
 
 
 
