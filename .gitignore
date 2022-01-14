@@ -1,11 +1,14 @@
+# Stuff
 build
 .vscode
 .idea
 node_modules
-*.txt
+
+# Databases
 E
 M
 A
 
 # Workflow files
 note.js
+security

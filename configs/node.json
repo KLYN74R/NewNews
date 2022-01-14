@@ -115,9 +115,10 @@
     "INFORM_WHEN_SPACE_CHANGE":false,
 
 
-     "INFO":{
+    "INFO":{
+        "VERSION":"v0.0.1-pre-alpha",
         "TOPICS":"football,basketball,hacktivity,baseball,crypto,olympiad,fifa,dunk_contest",
-        "EMPIRE_PUBLIC":"some.com,onemore.io,sameinterest.news",
+        "PUBLIC":"some.com,onemore.io,sameinterest.news",
         "CONTACT":"@:node@example.com,tg:@someuser,inst:@user",
         "ANY_NEWS_PREV_HREF_LEN":400,
         "EMP_NEWS_PREV_HREF_LEN":400,
@@ -135,23 +136,11 @@
         "GET_DEZCA":"^newnews.com,westbc.io,nnbrother.ua",
         "SEND_DEZCA":"^newnews.com,westbc.io,nnbrother.ua",
         "DEBOUNCE_TIME":20000,
-        "SYMBIOTES":"kNULL,CARNAGE"
+        "CORE_SYMBIOTES":"kNULL,CARNAGE"
     },
 
 
     "START_SID_EVERYONE":true,
-    "DEFAULT_ROLES":"",
-
-
-    "HOSTCHAINS_PROVIDERS":{
-        
-        "xrp":"wss://s.altnet.rippletest.net:51233",
-        "trx":"https://api.shasta.trongrid.io"
-
-    },
-
+    "DEFAULT_ROLES":""
     
-    "EVM":["bsc","eth","celo","arbitrum","avax","ftm","heco","matic","one","rsk","sys"],
-    "BITFORKS":["btc","ltc","doge","dash"]
-
 }

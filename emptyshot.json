@@ -1,0 +1,48 @@
+{
+    "TIME":0,
+    "STORE1":0,
+    "STORE2":0,
+    "BCQ":0,
+    "ANY_NEWS_FREE":[],
+    "EMP_NEWS_FREE":[],
+    "ANY_TOPICS_CONTROL":{
+    
+        "economy":[],"future":[],"nature":[],"other":[],"showbiz":[],"society":[],"sport":[],"tech":[]
+    
+    },
+
+    "IMPORT_ANY_NEWS":{
+
+        "IMPORTED":0
+    },
+    
+    "IMPORT_EMP_NEWS":{
+        
+        "IMPORTED":0
+    },    
+    
+    "IMPORT_BRANCHCOMS":{
+        
+        "IMPORTED":0
+    
+    },
+    
+    "IMPORT_STORE":{
+
+        "IMPORTED":0
+    
+    },
+
+    "EXPORT_EMP_NEWS":{
+    
+        "SEND":[]
+       
+    },
+    
+    "EXPORT_ANY_NEWS":{
+        
+        "SEND":[]
+        
+    }
+
+}

@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "NewNews-spacewide media project build using abilities of Klyntar",
   "main": "nn.js",
-  "type":"module",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "bin":{
-    "nn":"nn.js"
+  "bin": {
+    "nn": "nn.js"
   },
   "repository": {
     "type": "git",
@@ -20,12 +20,13 @@
     "klyntar"
   ],
   "author": "KlyntarTeam",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/KLYN74R/NewNews/issues"
   },
   "homepage": "https://github.com/KLYN74R/NewNews#readme",
   "dependencies": {
+    "blake3-wasm": "^2.1.5",
     "chalk-animation": "^1.6.0",
     "cli-spinners": "^2.6.1",
     "level": "^7.0.1",
