@@ -108,7 +108,7 @@ export let
 
         await dezCA.put('SNAPSHOT',SNAPSHOT)
     
-            .then(()=>LOG('SNAPSHOT!','S'))
+            .then(()=>LOG(fs.readFileSync(PATH_RESOLVE('images/custom/snapshot.txt')).toString(),'S'))
 
             .catch(e=>{
         
@@ -158,7 +158,9 @@ let graceful=()=>{
     LOG('NewNews stop has been initiated.Keep waiting...','I')
 
     //Probably stop logs on this step
-    
+    LOG(fs.readFileSync(PATH_RESOLVE('images/custom/termination.txt')).toString(),'W')    
+
+
     setInterval(()=>{
 
         //Each subprocess in each symbiote must be stopped
@@ -315,7 +317,7 @@ if(CONFIG.EMPIRE.START){
     .replaceAll('+','\x1b[31m+\x1b[36m')+'\x1b[0m\n')
         
         
-    LOG('Good start!','S')
+    LOG(fs.readFileSync(PATH_RESOLVE('images/custom/start.txt')).toString(),'S')
     
 
 
