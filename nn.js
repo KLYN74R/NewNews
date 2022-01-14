@@ -17,6 +17,7 @@ import fs from 'fs'
 
 
 
+
 /* OBLIGATORY PATH RESOLUTION*/
 global.__dirname = await import('path').then(async mod=>
   
@@ -296,7 +297,7 @@ if(CONFIG.EMPIRE.START){
     //Cool short animation
     await new Promise(r=>{
         
-        let animation=chalkAnimation.rainbow('\x1b[31;1m'+fs.readFileSync('images/intro.txt').toString()+'\x1b[0m')
+        let animation=chalkAnimation.rainbow('\x1b[31;1m'+fs.readFileSync(PATH_RESOLVE('images/intro.txt')).toString()+'\x1b[0m')
     
         setTimeout(()=>{ animation.stop() ; r() },CONFIG.ANIMATION_DURATION)
     
@@ -306,7 +307,7 @@ if(CONFIG.EMPIRE.START){
     process.stdout.write('\x1Bc')
     
     //Read banner
-    console.log('\x1b[36;1m'+fs.readFileSync('images/banner.txt').toString()
+    console.log('\x1b[36;1m'+fs.readFileSync(PATH_RESOLVE('images/banner.txt')).toString()
     
     //...and add extra colors & changes)
     .replace('Created by human beings','\x1b[31mCreated by human beings\x1b[36m')
