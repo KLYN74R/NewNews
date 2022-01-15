@@ -219,6 +219,7 @@ global.SIG_PROCESS={}
 
 //Set newsbuffers
 //Length 0 for buffers means that it's first init or some error has been occured
+console.log(SNAPSHOT)
 if(SNAPSHOT.ANY_NEWS_FREE.length===0) for(let i=1,l=CONFIG.ANY_NEWS_PERM;i<l;i++) SNAPSHOT.ANY_NEWS_FREE.push(i)
 if(SNAPSHOT.EMP_NEWS_FREE.length===0) for(let i=1,l=CONFIG.EMP_NEWS_PERM;i<l;i++) SNAPSHOT.EMP_NEWS_FREE.push(i)
 

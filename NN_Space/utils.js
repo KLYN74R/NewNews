@@ -148,6 +148,26 @@ SIG=(data,prv)=>new Promise((resolve,reject)=>
 HMAC=(data,sid,magic,fullHash)=>BLAKE3(data+sid+magic)===fullHash,
 
 
+
+
+/**@return Chain level data.Used when we check blocks
+ * Here we read from cache or get account from state,push to cache and return
+*/
+GET_CHAIN_ACC=(addr,chain)=>
+
+    //We get from db only first time-the other attempts will be gotten from ACCOUNTS
+    chains.get(chain).ACCOUNTS.get(addr)||chains.get(chain).STATE.get(addr)
+    
+    .then(ACCOUNT=>
+        
+        //Get and push to cache
+        chains.get(chain).ACCOUNTS.set(addr,{ACCOUNT,NS:new Set(),ND:new Set(),OUT:ACCOUNT.B}).get(addr)
+    
+    ).catch(e=>false),
+
+
+
+
 //Advanced function which also check limits(useful in routes where we accept relatively small data chunks not to paste payload size checker in each handler)
 BODY=(bytes,limit)=>new Promise(r=>r(bytes.byteLength<=limit&&JSON.parse(Buffer.from(bytes)))).catch(e=>false),
 

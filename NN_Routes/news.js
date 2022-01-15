@@ -351,6 +351,7 @@ let
                                     
                 await Promise.all(toSend.splice(0))
    
+                //!DEBUG DATA DELETE
                 console.log('AB GET ',alreadyExportedBufs)
                 
                 alreadyExportedBufs.push(...bundle[topics[i]])
