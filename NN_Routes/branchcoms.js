@@ -82,7 +82,7 @@ EXPORT_RESOURCES=async(control,scope,hashDB,srcDB,route)=>{
                 
                     SEND(node.domain+route,new MSG(node.id,packet,node.sid),msg=>{
 
-                        if(msg==='1'){
+                        if(msg==='OK'){
 
                             LOG(`\x1b[30m${scope} \x1b[32;1mto \x1b[36;1m${node.domain}\x1b[32;1m successful`,'S')
 
@@ -117,7 +117,7 @@ EXPORT_RESOURCES=async(control,scope,hashDB,srcDB,route)=>{
         
             SEND(destinate.domain+route,new MSG(destinate.id,packet,destinate.sid),msg=>
         
-                msg==='1'
+                msg==='OK'
                 ?
                 LOG(`\x1b[30m${scope} \x1b[36;1mto ${destinate.domain}\x1b[32;1m successful`,'S')
                 :

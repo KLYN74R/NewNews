@@ -16,9 +16,10 @@
 
 
 
-import {SIG} from './crypto_utils.js'
+import {SIG} from '../NN_Space/utils.js'
 import {hash} from 'blake3-wasm'
 import fetch from 'node-fetch'
+
 
 
 
@@ -101,6 +102,33 @@ console.log('GUID is ->', GUID)
 
 
 
+payload={
+    c:myAddress,
+    i:'COVID-19',
+    r:'https://fsdfdsfgdlk.io/dsvmd;d,lkldl',//CSP style
+    s:await SIG('COVID-19'+'https://fsdfdsfgdlk.io/dsvmd;d,lkldl',KEYPAIR.prv)
+}
+
+
+console.log('News is available by hash -> ',BLAKE3(JSON.stringify(payload)))
+
+
+
+fetch('http://localhost:8888/s2',
+
+    {method:'POST',body:JSON.stringify(
+        
+        {
+        
+            d:payload,
+
+            f:BLAKE3(payload.i+payload.r+payload.s+SID+GUID+localNonce)
+        
+        }
+    )}
+
+).then(r=>r.text()).then(console.log)
+
 
 
 
@@ -136,52 +164,37 @@ console.log('GUID is ->', GUID)
 
 
 
-let news={
+// let news={
 
-    h:'Top government Ukraian sites were hacked by Russian associated adversaries groups Fancy Bear_aaaaaaaaaaaaaaaaaa:osvita.ua mynode.dasd qwerty.xyz'
+//     h:'Top government Ukraian sites were hacked by Russian associated adversaries groups Fancy Bear_aaaaaaaaaaaaaaaaaa:osvita.ua mynode.dasd qwerty.xyz'
 
-}
-
-
-let newsArr=[]
-
-for(let i=0;i<20;i++) newsArr.push(news)
+// }
 
 
-let body=['hacktivity',newsArr]
+// let newsArr=[]
+
+// for(let i=0;i<20;i++) newsArr.push(news)
+
+
+// let body=['hacktivity',newsArr]
 
 
 
-fetch('http://localhost:8888/el',
+// fetch('http://localhost:8888/el',
 
-    {method:'POST',body:JSON.stringify(
+//     {method:'POST',body:JSON.stringify(
         
-        {
-            c:myAddress,
+//         {
+//             c:myAddress,
         
-            d:body,
+//             d:body,
 
-            f:BLAKE3(JSON.stringify(body)+SID+GUID+localNonce)
+//             f:BLAKE3(JSON.stringify(body)+SID+GUID+localNonce)
         
-        }
-    )}
+//         }
+//     )}
 
-).then(r=>r.text()).then(console.log)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// ).then(r=>r.text()).then(console.log)
 
 
 

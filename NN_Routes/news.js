@@ -382,7 +382,7 @@ let
                 SEND(receiver.domain+route,new MSG(receiver.id,packet,receiver.sid),msg=>
 
 
-                    msg==='1'
+                    msg==='OK'
                     ?
                     LOG(`\x1b[30mEXPORT_NEWS\x1b[32;1m to \x1b[36;1m${receiver.domain}\x1b[32;1m was successful`,'S')
                     :
@@ -532,7 +532,7 @@ export let N={
 
             let member=await ACCOUNTS.get(b.d),newb=await ACCOUNTS.get(b.c)
 
-            if(!newb.R.includes('E')&&HMAC(b.c,member.S,'',b.f)&&(CONFIG.ENTRY_NEWBIES==='1'||CONFIG.ENTRY_NEWBIES==='2'&&INV2.test(member.R))){
+            if(!newb.R.includes('E')&&HMAC(b.c,member.S,'',b.f)&&(CONFIG.ENTRY_NEWBIE==='1'||CONFIG.ENTRY_NEWBIES==='2'&&INV2.test(member.R))){
                 
                 newb.R+='E'
 

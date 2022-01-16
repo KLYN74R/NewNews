@@ -1,4 +1,4 @@
-import {ACC_CONTROL,HMAC,BODY,PRIVIL,BLAKE3,PARSE_JSON,SAFE_ADD,LOG} from '../NN_Space/utils.js'
+import {ACC_CONTROL,HMAC,BODY,PRIVIL,BLAKE3,PARSE_JSON,SAFE_ADD,LOG,VERIFY} from '../NN_Space/utils.js'
 
 import CACHE from '../NN_Essences/primitivecache.js'
 
@@ -262,7 +262,8 @@ S={
         b.d.i.length<=CONFIG.STORE2_INPUT_LEN&&b.d.r.length<=CONFIG.STORE2_REFS_LEN
         &&
         await ACC_CONTROL(b.d.c, b.d.i+b.d.r+b.d.s, b.f, 1, PRIVIL)
-        
+        &&
+        await VERIFY(b.d.i+b.d.r,b.d.s,b.d.c)//check the signature
         
 
         

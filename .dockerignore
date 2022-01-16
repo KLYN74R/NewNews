@@ -1,7 +1,11 @@
+# Stuff
 build
 .vscode
 .idea
 node_modules
+NN_Tests
+
+# Databases
 E
 M
 A
