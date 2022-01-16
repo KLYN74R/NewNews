@@ -1,4 +1,4 @@
-import {ACC_CONTROL,BODY,LOG,PRIVIL,SEND} from '../NN_Space/utils.js'
+import {ACC_CONTROL,BODY,LOG,PRIVIL,SEND, VERIFY} from '../NN_Space/utils.js'
 
 import {getData,importData,FLUSH_CACHE} from './store.js'
 
@@ -207,7 +207,15 @@ export let B={
                         
                             //Privil addresses has ability to open branch of comments to any news they want.Default addresses may open branches only to existed fullnews on this node
                     
-                            if(PRIVIL.test(acc.R)) branchcom.put(b.d,JSON.stringify([])).then(()=>(!a.aborted&&a.end('OK'),SNAPSHOT.BCQ++)).catch(e=>!a.aborted&&a.end('DB error'))
+                            if(PRIVIL.test(acc.R)){
+
+                                branchcom.put(b.d,JSON.stringify([])).then(()=>
+                                
+                                    (!a.aborted && a.end('OK') , SNAPSHOT.BCQ++ )
+                                    
+                                ).catch(e=>!a.aborted && a.end('DB error'))
+
+                            }
                     
                             else store.get(b.d).then(v=>
                                 
@@ -262,9 +270,11 @@ export let B={
         &&
         typeof b.d[1]?.c==='string'&&typeof b.d[1].t==='string'&&b.d[1].t.length<=CONFIG.COMMENT_LEN
         &&
-        typeof b.d[1].s==='string'&&await ACC_CONTROL(b.d[1].c,b.d[1].t+b.d[1].s,b.f,1)
-
-
+        typeof b.d[1].s==='string'
+        &&
+        await ACC_CONTROL(b.d[1].c,b.d[1].t+b.d[1].s,b.f,1)
+        &&
+        await VERIFY(b.d[1].t,b.d[1].s,b.d[1].c)
 
         if(allow){
 
