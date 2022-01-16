@@ -186,7 +186,7 @@ export let B={
         //If trigger is off or maximum branches currently
         if(CONFIG.BC_PERM===SNAPSHOT.BCQ||!CONFIG.TRIGGERS.OPEN_BC){
             
-            !a.aborted&&a.end('Route is closed(trigger off) or maximum branches already here')
+            !a.aborted&&a.end('Route is off or no more space')
             
             return
         
@@ -207,17 +207,17 @@ export let B={
                         
                             //Privil addresses has ability to open branch of comments to any news they want.Default addresses may open branches only to existed fullnews on this node
                     
-                            if(PRIVIL.test(acc.R)) branchcom.put(b.d,JSON.stringify([])).then(()=>(!a.aborted&&a.end('1'),SNAPSHOT.BCQ++)).catch(e=>!a.aborted&&a.end('Db error'))
+                            if(PRIVIL.test(acc.R)) branchcom.put(b.d,JSON.stringify([])).then(()=>(!a.aborted&&a.end('OK'),SNAPSHOT.BCQ++)).catch(e=>!a.aborted&&a.end('DB error'))
                     
                             else store.get(b.d).then(v=>
                                 
                                     v[0]==='{'//means that it's fullnews
                                     ?
-                                    branchcom.put(b.d,JSON.stringify([])).then(()=>(!a.aborted&&a.end('1'),SNAPSHOT.BCQ++))
+                                    branchcom.put(b.d,JSON.stringify([])).then(()=>(!a.aborted&&a.end('OK'),SNAPSHOT.BCQ++))
                                     :
                                     !a.aborted&&a.end('No such fullnews on this chain')
         
-                                ).catch(e=>!a.aborted&&a.end('Db error'))
+                                ).catch(e=>!a.aborted&&a.end('DB error'))
 
     
                             //Тут такая проверка,чтоб BRANCHCOMS_CONTROL был размером как BUF_MAX_LEN чтоб дальше не было проблем с размером буфера
@@ -225,7 +225,7 @@ export let B={
             
                             CONFIG.EXPORT_BRANCHCOMS.HANDLE_EVEN_IF_STOP&&PUSH_BRANCHCOMS_CONTROL(b.d)
                     
-                        }else !a.aborted&&a.end('Db error')    
+                        }else !a.aborted&&a.end('DB error')    
                         
                     })
 
@@ -246,7 +246,7 @@ export let B={
         
         if(!CONFIG.TRIGGERS.COMMENT_BC){
             
-            !a.aborted&&a.end('Trigger off')
+            !a.aborted&&a.end('Route is off')
             
             return
         
@@ -274,15 +274,33 @@ export let B={
 
                 if(CONFIG.BCL>bc.length){
                 
-                    bc.push({c:b.d[1].c,t:b.d[1].t,s:b.d[1].s})
+                    bc.push({
+                        
+                        c:b.d[1].c,
+                        
+                        t:b.d[1].t,
+                        
+                        s:b.d[1].s
                     
-                    branchcom.put(b.d[0],JSON.stringify(bc)).then(()=>!a.aborted&&a.end('1')).catch(e=>!a.aborted&&a.end('Db error'))
+                    })
+                    
+                    branchcom.put(b.d[0],JSON.stringify(bc))
+                    
+                        .then(()=>
+                        
+                            !a.aborted && a.end('OK')
+                            
+                        ).catch(e=>
+                            
+                            !a.aborted && a.end('DB error')
+                            
+                        )
     
-                }else !a.aborted&&a.end('Too many comments.Try another node or check from cluster(via /i)')
+                }else !a.aborted && a.end('Too many comments.Try another node or check from cluster(via /i)')
     
-            }).catch(e=>!a.aborted&&a.end('Db error'))
+            }).catch(e=>!a.aborted && a.end('DB error'))
 
-        }else !a.aborted&&a.end('Wrong types')
+        }else !a.aborted && a.end('Wrong types')
 
     }),
 

@@ -34,7 +34,7 @@ export let C={
                         
                             ctr.push(b.c)
                         
-                            contracts.put(b.c,ctr).then(()=>a.end('1')).catch(e=>a.end(''))
+                            contracts.put(b.c,ctr).then(()=>a.end('OK')).catch(e=>a.end(''))
                         
                         }else a.end('')
                     
@@ -42,7 +42,7 @@ export let C={
                     
                         e.notFound
                         ?
-                        contracts.put(b.c,[b.d]).then(()=>a.end('1')).catch(e=>a.end(''))//encrypt by RSA.In short,way of msg may be like: USER ---> RSA(msg,RSA_pub) ---> THIS NODE ---> NODE OWNER CLIENTSIDE ---> RSA(msg,RSA_prv)
+                        contracts.put(b.c,[b.d]).then(()=>a.end('OK')).catch(e=>a.end(''))//encrypt by RSA.In short,way of msg may be like: USER ---> RSA(msg,RSA_pub) ---> THIS NODE ---> NODE OWNER CLIENTSIDE ---> RSA(msg,RSA_prv)
                         :
                         a.end('')
                     

@@ -28,7 +28,7 @@ ______________________________________Available prefixes________________________
         &&
         BLAKE3()
         &&
-        integrity.put(b.c+b.h,b.d).then(()=>a.end('1')).catch(e=>a.end(''))
+        integrity.put(b.c+b.h,b.d).then(()=>a.end('OK')).catch(e=>a.end(''))
     
     }),
     

@@ -194,7 +194,7 @@ SAFE_ADD=(buffer,chunk,a)=>new Promise(r=>r( Buffer.concat([ buffer, Buffer.from
     
     .catch(e=>{
         
-        a.end('B')
+        a.end('Local buffer overflow')
         
         LOG(`Overflow while accept data from ${Buffer.from(a.getRemoteAddressAsText()).toString('utf-8')}`,'F')
     

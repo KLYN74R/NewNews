@@ -32,7 +32,7 @@ export let L={
             if(v>0){
                 //REALIZATION
             }
-            a.end('1')
+            a.end('OK')
         
         }).catch(e=>a.end(''))
 

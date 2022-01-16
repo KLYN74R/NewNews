@@ -27,7 +27,7 @@ let
 
     GET_NEWS=async(a,src,topic,seqId)=>{
 
-        if(!CONFIG.TRIGGERS[src==='a'?'GET_ANY_NEWS':'GET_EMP_NEWS']) !a.aborted&&a.end('I')
+        if(!CONFIG.TRIGGERS[src==='a'?'GET_ANY_NEWS':'GET_EMP_NEWS']) !a.aborted&&a.end('Route is off')
         
         else{
 
@@ -81,13 +81,13 @@ let
 
             
             //If no free space or route's trigger is off-immediately response
-            if(!(freeSpace||CONFIG.TRIGGERS[`SEND_${anyOrEmpire==='a'?'ANY':'EMP'}_NEWS`])) a.end('I')
+            if(!(freeSpace||CONFIG.TRIGGERS[`SEND_${anyOrEmpire==='a'?'ANY':'EMP'}_NEWS`])) a.end('Route is off')
     
             else if(NEWSBUF[anyOrEmpire][b.d.t] && freeSpace  &&  b.d.h.length<=CONFIG[label+'PREV_HREF_LEN']  &&  await ACC_CONTROL(b.c,b.d.t+b.d.h,b.f,1,role)){
                 
                 NEWSBUF[anyOrEmpire][b.d.t].push(b.d.h)
 
-                !a.aborted&&a.end('1')
+                !a.aborted&&a.end('OK')
 
                 cache.set(anyOrEmpire+b.d.t+'C',JSON.stringify(NEWSBUF[anyOrEmpire][b.d.t]))
     
@@ -117,22 +117,24 @@ let
 
         let total=0,buf=Buffer.alloc(0),ref=type
 
-        type=(type==='a'?'ANY':'EMP')+'_NEWS_'
+            type=(type==='a'?'ANY':'EMP')+'_NEWS_',
         
-        let free=SNAPSHOT[type+'FREE'],bufSize=CONFIG[type+'BUF_LEN']
+            free=SNAPSHOT[type+'FREE'],bufSize=CONFIG[type+'BUF_LEN']
 
 
         
 
         a.writeHeader('Access-Control-Allow-Origin','*').onAborted(()=>a.aborted=true).onData(async(chunk,last)=>{
 
+            //If route is enabled
             if(!CONFIG.TRIGGERS[`SEND_${type}LIST`]){
                 
-                a.end('I')
+                a.end('Route is off')
                 
                 return
             
             }
+
 
             if(total+chunk.byteLength<=CONFIG.EXTENDED_PAYLOAD_SIZE){
             
@@ -168,11 +170,11 @@ let
                         
                         for(let l=b.d[1].length;i<l;i++){
                         
-                            if(typeof b.d[1][i]?.h==='string'&&b.d[1][i].h.length<=CONFIG[type+'PREV_HREF_LEN']){
+                            if(typeof b.d[1][i]?.h==='string' && b.d[1][i].h.length<=CONFIG[type+'PREV_HREF_LEN']){
             
                                 NEWSBUF[ref][b.d[0]].push(b.d[1][i].h)
 
-                                if(NEWSBUF[ref][b.d[0]].length===bufSize){
+                                if(NEWSBUF[ref][b.d[0]].length === bufSize){
                                     
                                     if(free[0]){
 
@@ -181,7 +183,13 @@ let
                                         SNAPSHOT[`${ref==='a'?'ANY':'EMP'}_TOPICS_CONTROL`][b.d[0]].push(v)
                                         
                                         //Even if problem with write-we can push back this bufferId for another case later
-                                        news[ref][b.d[0]].put(v,JSON.stringify(NEWSBUF[ref][b.d[0]].splice(0))).catch(e=>free.push(v))
+                                        news[ref][b.d[0]]
+                                        
+                                            .put(v,JSON.stringify(
+                                                
+                                                NEWSBUF[ref][b.d[0]].splice(0)
+                                            
+                                            )).catch(e=>free.push(v))
                                     
                                     }else{ brakeIndex=i ; break }
                                     
@@ -197,13 +205,13 @@ let
                          * to extra sources,defined in INFO
                          * 
                          */
-                        !a.aborted&&a.end( brakeIndex===undefined ? '1':'B'+i )
+                        !a.aborted && a.end( brakeIndex===undefined ? 'OK':'Break on '+i )
                         
                     }else !a.aborted&&a.end('Overview failed')
 
                 }
             
-            }else !a.aborted&&a.end('M')
+            }else !a.aborted&&a.end('Payload too big')
 
         })
 
@@ -233,7 +241,7 @@ let
             //Dynamically track trigger's state to immidiately stop/start accept data
             if(!trigger){
                 
-                !a.aborted&&a.end('S')
+                !a.aborted&&a.end('Route is off')
                 
                 return
             
@@ -267,7 +275,7 @@ let
                         }else console.log('HMAC SUCCESS')//delete
 
                         
-                        !a.aborted&&a.end('1')
+                        !a.aborted&&a.end('OK')
                         
                         
                         
@@ -304,7 +312,7 @@ let
 
                 }
             
-            }else !a.aborted&&a.end('M')
+            }else !a.aborted&&a.end('Payload too big')
         
         })
 
@@ -502,11 +510,11 @@ export let N={
                 
                     news[type][topic].put(SNAPSHOT[ref+'_TOPICS_CONTROL'][topic][bufId],JSON.stringify(v)).then(()=>cache.set(type+topic+bufId))
                     
-                    !a.aborted&&a.end('1')
+                    !a.aborted&&a.end('OK')
                 
                 }else !a.aborted&&a.end('Too many sources')
 
-            }).catch(e=>!a.aborted&&a.end('Db error'))
+            }).catch(e=>!a.aborted&&a.end('DB error'))
             
         }else !a.aborted&&a.end('Overview failed')
 
@@ -530,7 +538,7 @@ export let N={
 
                 ACCOUNTS.set(b.c,newb)
 
-                !a.aborted&&a.end('1')
+                !a.aborted&&a.end('OK')
             
             }else !a.aborted&&a.end('Inner verification failed')
         

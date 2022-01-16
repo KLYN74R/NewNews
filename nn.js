@@ -454,7 +454,7 @@ UWS[CONFIG.TLS_ENABLED?'SSLApp':'App'](CONFIG.TLS_CONFIGS)
         
         !a.aborted&&a.end(v)
         
-    ).catch(e=>!a.aborted&&a.end('Db error'))
+    ).catch(e=>!a.aborted&&a.end('DB error'))
     
 )
         

@@ -16,16 +16,9 @@
 
 
 
-let z={
-    pub: '2vMMWmJL7ZC+M0GiDXfcibWIrArvOAhmthLf6aK4Y1M=',
-    prv: 'MC4CAQAwBQYDK2VwBCIEIF5KQKSx6fCnflqdvC5OjqFXyYpvLzM9HuK5DJvLmUGZ'
-}
-
 import {SIG} from './crypto_utils.js'
 import {hash} from 'blake3-wasm'
 import fetch from 'node-fetch'
-
-
 
 
 
@@ -44,15 +37,15 @@ payload='IVAN_USHKOV',//some transaction data.In this case-it's setting up deleg
 
 chain='q0Bl2spIOIBhA5pviv6B69RdBcZls7iy+y4Wc3tgSVs=',//chain on which you wanna send tx
 
-chainNonce=await fetch('http://localhost:7777/account/ab4065daca48388061039a6f8afe81ebd45d05c665b3b8b2fb2e16737b60495b/10760b81e2f2809336d60ac85433e13e05d9893045d71be5e69ee539aa59e77e')
+// chainNonce=await fetch('http://localhost:7777/account/ab4065daca48388061039a6f8afe81ebd45d05c665b3b8b2fb2e16737b60495b/10760b81e2f2809336d60ac85433e13e05d9893045d71be5e69ee539aa59e77e')
 
-.then(r=>r.json()).then(data=>data.N+1).catch(e=>{
+// .then(r=>r.json()).then(data=>data.N+1).catch(e=>{
     
-    console.log(`Can't get chain level data`)
+//     console.log(`Can't get chain level data`)
     
-    process.exit(121)
+//     process.exit(121)
 
-}),//nonce on appropriate chain
+// }),//nonce on appropriate chain
 
 
 
@@ -67,7 +60,7 @@ SID='V5nYl187DcrVVw2v8x+J3qMm7APkY78uVYHWNPzbZjbUH87T5ykVCvu/gqFnsqE1kYvDzfZM27k
 //NOTE:GUID is changable so if you get an error after request-check GUID and localnonce again
 
 //unique value per instance run.Before send tx you can GET /info to get current GUID of node
-{GUID}=await fetch('http://localhost:7777/i').then(r=>r.json()).catch(e=>{
+{GUID}=await fetch('http://localhost:8888/i').then(r=>r.json()).catch(e=>{
     
     console.log(`Can't get GUID`)
     
@@ -79,10 +72,9 @@ SID='V5nYl187DcrVVw2v8x+J3qMm7APkY78uVYHWNPzbZjbUH87T5ykVCvu/gqFnsqE1kYvDzfZM27k
 
 
 //nonce in ACCOUNTS of node
-localNonce=await fetch(`http://localhost:7777/local/${Buffer.from(myAddress,'base64').toString('hex')}`).then(r=>r.text()).catch(e=>console.log(`Can't get LocalNonce`)),
+localNonce=await fetch(`http://localhost:8888/local/${Buffer.from(myAddress,'base64').toString('hex')}`).then(r=>r.text()).catch(e=>console.log(`Can't get LocalNonce`)),
 
 
-            
 manifest=JSON.stringify({
 
     HIVEMIND:["kNULL","CARNAGE","TOXIN","RIOT","AGONY"],
@@ -105,6 +97,10 @@ manifest=JSON.stringify({
 
 console.log('Localnonce ->', localNonce)
 
+console.log('GUID is ->', GUID)
+
+
+
 
 
 
@@ -112,13 +108,13 @@ console.log('Localnonce ->', localNonce)
 
 // let news={
 
-//     t:'<CATEGORY>',
-//     h:'HASH12313135:MANY HREFES MANY HFESAD MF MKFDSFLMSDFKMDSLF'
+//     t:'hacktivity',
+//     h:'REVIL members are arrested in Russia_HAHSHSHHSSA:xss.io jo.mpkpokml'
 
 // }
 
 
-// fetch('http://localhost:7777/an',
+// fetch('http://localhost:8888/en',
 
 //     {method:'POST',body:JSON.stringify(
         
@@ -133,6 +129,62 @@ console.log('Localnonce ->', localNonce)
 //     )}
 
 // ).then(r=>r.text()).then(console.log)
+
+
+
+
+
+
+
+let news={
+
+    h:'Top government Ukraian sites were hacked by Russian associated adversaries groups Fancy Bear_aaaaaaaaaaaaaaaaaa:osvita.ua mynode.dasd qwerty.xyz'
+
+}
+
+
+let newsArr=[]
+
+for(let i=0;i<20;i++) newsArr.push(news)
+
+
+let body=['hacktivity',newsArr]
+
+
+
+fetch('http://localhost:8888/el',
+
+    {method:'POST',body:JSON.stringify(
+        
+        {
+            c:myAddress,
+        
+            d:body,
+
+            f:BLAKE3(JSON.stringify(body)+SID+GUID+localNonce)
+        
+        }
+    )}
+
+).then(r=>r.text()).then(console.log)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

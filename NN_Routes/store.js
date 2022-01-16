@@ -56,7 +56,7 @@ getData=async(a,q,allowedGET,maxAge,cacheObj,db)=>{
         
         !a.aborted&&a.end(send)
         
-    }else a.end('I')
+    }else a.end('Route is off')
 
 },
 
@@ -83,7 +83,7 @@ importData=(a,tag,db)=>{
         //Dynamically track trigger's state to immidiately stop/start accept data
         if(!trigger){
             
-            !a.aborted&&a.end('Trigger off')
+            !a.aborted&&a.end('Route is off')
             
             return
         
@@ -117,7 +117,7 @@ importData=(a,tag,db)=>{
 
                     }
 
-                    !a.aborted&&a.end('1')
+                    !a.aborted&&a.end('OK')
 
                     //__________________________________________MAIN LOGIC__________________________________________
 
@@ -196,7 +196,7 @@ S={
 
         if(CONFIG.STORE1_PERM===SNAPSHOT.STORE1||!CONFIG.TRIGGERS.STORE1){
             
-            !a.aborted&&a.end('Route is closed(trigger off) or maximum branches already here')
+            !a.aborted&&a.end('Route is off or no more space')
             
             return
         
@@ -218,7 +218,7 @@ S={
             ?
             store.put(b.d[0],b.d[1]).then(()=>{
                 
-                !a.aborted&&a.end('1')
+                !a.aborted&&a.end('OK')
                 
                 SNAPSHOT.STORE1++
                 
@@ -226,9 +226,9 @@ S={
             
             })
             :
-            !a.aborted&&a.end('Db error')
+            !a.aborted&&a.end('DB error')
         
-        ).catch(e=>!a.aborted&&a.end('Db error'))
+        ).catch(e=>!a.aborted&&a.end('DB error'))
         :
         !a.aborted&&a.end('Verification failed')
 
@@ -244,7 +244,7 @@ S={
         
         if(CONFIG.STORE2_PERM===SNAPSHOT.STORE2 || !CONFIG.TRIGGERS.STORE2){
             
-            !a.aborted&&a.end('I')
+            !a.aborted&&a.end('Route is off or no more space')
             
             return
         
@@ -284,13 +284,13 @@ S={
             
             store.put(hash,json).then(()=>{
                 
-                !a.aborted&&a.end('1')
+                !a.aborted&&a.end('OK')
                 
                 SNAPSHOT.STORE2++
                 
                 CONFIG.EXPORT_STORE.HANDLE_EVEN_IF_STOP&&PUSH_STORE_CONTROL(hash)
             
-            }).catch(e=>!a.aborted&&a.end('Db error'))
+            }).catch(e=>!a.aborted&&a.end('DB error'))
 
         }else !a.aborted&&a.end('Overview failed')
 

@@ -26,7 +26,7 @@ export let D={
             
                 //Logic
             
-            }).catch(e=>e.notFound?dezCA.put(b.c,JSON.stringify(new Prfproofs(['S_'+b.d[0]],b.d[1])))&&a.end('1'):a.end(''))
+            }).catch(e=>e.notFound?dezCA.put(b.c,JSON.stringify(new Prfproofs(['S_'+b.d[0]],b.d[1])))&&a.end('OK'):a.end(''))
         
         }else a.end('')
         
@@ -75,12 +75,12 @@ export let D={
                    
                 dezCA.put(b.c,JSON.stringify(v))
                 
-                a.end('1')
+                a.end('OK')
 
             }
             else a.end('')
             
-        }).catch(e=>e.notFound?dezCA.put(b.c,JSON.stringify(new Prfproofs([`S_${b.d[0]}`],b.d[1])))&&a.end('1'):a.end(''))
+        }).catch(e=>e.notFound?dezCA.put(b.c,JSON.stringify(new Prfproofs([`S_${b.d[0]}`],b.d[1])))&&a.end('OK'):a.end(''))
         :
         a.end('')
 
