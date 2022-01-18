@@ -6,7 +6,7 @@ import MSG from '../NN_Essences/msg.js'
 
 import {FLUSH_CACHE} from './store.js'
 
-import {news} from '../nn.js'
+import {dezCA, news} from '../nn.js'
 
 import fs from 'fs'
 
@@ -80,39 +80,39 @@ let
         
         let label=(anyOrEmpire==='a'?'ANY':'EMP')+'_NEWS_',
 
-            b=await BODY(bytes,CONFIG.PAYLOAD_SIZE),
+            body=await BODY(bytes,CONFIG.PAYLOAD_SIZE),
 
             free=SNAPSHOT[label+'FREE'],bufLen=CONFIG[label+'BUF_LEN']
 
 
 
 
-        if(typeof b.c==='string'&&typeof b.f==='string'&&typeof b.d?.t==='string'&&typeof b.d.h==='string'){
+        if(typeof body.c==='string'&&typeof body.f==='string'&&typeof body.d?.t==='string'&&typeof body.d.h==='string'){
             
             //Check if we have free buffers(then we have free place).If no free space-try to add news at least to NEWSBUF,checkin' size of array
-            let freeSpace=free[0] || NEWSBUF[anyOrEmpire][b.d.t]?.length!==bufLen
+            let freeSpace=free[0] || NEWSBUF[anyOrEmpire][body.d.t]?.length!==bufLen
 
             
             //If no free space or route's trigger is off-immediately response
             if(!(freeSpace||CONFIG.TRIGGERS[`SEND_${anyOrEmpire==='a'?'ANY':'EMP'}_NEWS`])) a.end('Route is off')
     
-            else if(NEWSBUF[anyOrEmpire][b.d.t]  &&  freeSpace  &&  b.d.h.length<=CONFIG[label+'PREV_HREF_LEN']  &&  await ACC_CONTROL(b.c,b.d.t+b.d.h,b.f,1,role)){
+            else if(NEWSBUF[anyOrEmpire][body.d.t]  &&  freeSpace  &&  body.d.h.length<=CONFIG[label+'PREV_HREF_LEN']  &&  await ACC_CONTROL(body.c,body.d.t+body.d.h,body.f,1,role)){
                 
-                NEWSBUF[anyOrEmpire][b.d.t].push(b.d.h)
+                NEWSBUF[anyOrEmpire][body.d.t].push(body.d.h)
 
                 !a.aborted && a.end('OK')
 
-                cache.set(anyOrEmpire+b.d.t+'C',JSON.stringify(NEWSBUF[anyOrEmpire][b.d.t]))
+                cache.set(anyOrEmpire+body.d.t+'C',JSON.stringify(NEWSBUF[anyOrEmpire][body.d.t]))
     
-                if(free[0] && NEWSBUF[anyOrEmpire][b.d.t].length===bufLen){
+                if(free[0] && NEWSBUF[anyOrEmpire][body.d.t].length===bufLen){
                     
                     let v=free.shift()
                                             
-                    SNAPSHOT[label+'CONTROL'][b.d.t].push(v)                    
+                    SNAPSHOT[label+'CONTROL'][body.d.t].push(v)                    
                     
-                    cache.cache.delete(cache.set(anyOrEmpire+b.d.t+'C'))//no sense to save duplicates
+                    cache.cache.delete(cache.set(anyOrEmpire+body.d.t+'C'))//no sense to save duplicates
 
-                    news[anyOrEmpire][b.d.t].put(free[0],JSON.stringify(NEWSBUF[anyOrEmpire][b.d.t].splice(0))).catch(e=>free.push(v))
+                    news[anyOrEmpire][body.d.t].put(free[0],JSON.stringify(NEWSBUF[anyOrEmpire][body.d.t].splice(0))).catch(e=>free.push(v))
                     
                 }
                 
@@ -160,21 +160,21 @@ let
                 
                 if(last){
 
-                    let b=await PARSE_JSON(buf),
+                    let body=await PARSE_JSON(buf),
 
 
                     //Complex check
                     allow=
                     
-                    typeof b.c==='string'&&typeof b.f==='string'//Check formats
+                    typeof body.c==='string'&&typeof body.f==='string'//Check formats
                     &&
-                    NEWSBUF[ref][b.d?.[0]]//if we have such category
+                    NEWSBUF[ref][body.d?.[0]]//if we have such category
                     &&
-                    CONFIG[type+'LIST_MAX']>=b.d[1]?.length//if list size is OK
+                    CONFIG[type+'LIST_MAX']>=body.d[1]?.length//if list size is OK
                     &&
-                    (free[0]||NEWSBUF[ref][b.d[0]].length!==bufSize)//if we have enough space.With <free[0]> we check that in case of full buffer we'll have place to save it,with second condition we check "can we save it at least to buffer if size of it allows"
+                    (free[0]||NEWSBUF[ref][body.d[0]].length!==bufSize)//if we have enough space.With <free[0]> we check that in case of full buffer we'll have place to save it,with second condition we check "can we save it at least to buffer if size of it allows"
                     &&
-                    await ACC_CONTROL(b.c,JSON.stringify(b.d),b.f,CONFIG[`ADD_FOR_${type}LIST`])//Note-for lists we can add more than 1 to nonce to get to debouncing earlier and prevent spam
+                    await ACC_CONTROL(body.c,JSON.stringify(body.d),body.f,CONFIG[`ADD_FOR_${type}LIST`])//Note-for lists we can add more than 1 to nonce to get to debouncing earlier and prevent spam
                 
 
 
@@ -184,26 +184,26 @@ let
                         
                         //Better to check available space dynamically inside cycle in order to async
                         
-                        for(let l=b.d[1].length;i<l;i++){
+                        for(let l=body.d[1].length;i<l;i++){
                         
-                            if(typeof b.d[1][i]?.h==='string' && b.d[1][i].h.length<=CONFIG[type+'PREV_HREF_LEN']){
+                            if(typeof body.d[1][i]?.h==='string' && body.d[1][i].h.length<=CONFIG[type+'PREV_HREF_LEN']){
             
-                                NEWSBUF[ref][b.d[0]].push(b.d[1][i].h)
+                                NEWSBUF[ref][body.d[0]].push(body.d[1][i].h)
 
-                                if(NEWSBUF[ref][b.d[0]].length === bufSize){
+                                if(NEWSBUF[ref][body.d[0]].length === bufSize){
                                     
                                     if(free[0]){
 
                                         let v=free.shift()//to prevent race condition & TOCTOU attacks
 
-                                        SNAPSHOT[`${ref==='a'?'ANY':'EMP'}_TOPICS_CONTROL`][b.d[0]].push(v)
+                                        SNAPSHOT[`${ref==='a'?'ANY':'EMP'}_TOPICS_CONTROL`][body.d[0]].push(v)
                                         
                                         //Even if problem with write-we can push back this bufferId for another case later
-                                        news[ref][b.d[0]]
+                                        news[ref][body.d[0]]
                                         
                                             .put(v,JSON.stringify(
                                                 
-                                                NEWSBUF[ref][b.d[0]].splice(0)
+                                                NEWSBUF[ref][body.d[0]].splice(0)
                                             
                                             )).catch(e=>free.push(v))
                                     
@@ -214,7 +214,7 @@ let
                             }
                         
                         }
-                        cache.set(ref+b.d[0]+'C',JSON.stringify(NEWSBUF[ref][b.d[0]]))
+                        cache.set(ref+body.d[0]+'C',JSON.stringify(NEWSBUF[ref][body.d[0]]))
                         /**
                          * B+index where index is position of news in array
                          * To get info on which news we break the cycle and inform that sender must re-send this news(from position i)
@@ -273,15 +273,15 @@ let
                 
                 if(last){
                     
-                    let b=await PARSE_JSON(buf),SCOPE=CONFIG[`IMPORT_${TYPE}_NEWS`].SCOPE
+                    let body=await PARSE_JSON(buf),SCOPE=CONFIG[`IMPORT_${TYPE}_NEWS`].SCOPE
 
                     console.log("ACCEPT IMPORT")//delete
 
-                    if(typeof b.c==='string'&&typeof b.f==='string'&&free[0]&&SCOPE[b.c]){
+                    if(typeof body.c==='string'&&typeof body.f==='string'&&free[0]&&SCOPE[body.c]){
 
                         let timestamp=new Date().getTime()
 
-                        if(!HMAC(JSON.stringify(b.d),SCOPE[b.c].sid,b.t,b.f) || (timestamp-b.t)/60000>5){
+                        if(!HMAC(JSON.stringify(body.d),SCOPE[body.c].sid,body.t,body.f) || (timestamp-body.t)/60000>5){
                         
                             !a.aborted&&a.end('HMAC failed')
     
@@ -296,7 +296,7 @@ let
                         
                         
                         
-                        let packet=b.d,topics=Object.keys(packet)
+                        let packet=body.d,topics=Object.keys(packet)
 
                         //console.log('PACKET in import ->',packet)
                         console.log('TOPICS ',topics)
@@ -487,7 +487,15 @@ let graceful=async()=>{
 
     //Probably stop logs on this step
     LOG(fs.readFileSync(PATH_RESOLVE('/images/custom/termination.txt')).toString(),'W')    
+
+
+
+    //0.Commit snapshot to have latest one
+    await dezCA.put('SNAPSHOT',SNAPSHOT).then(()=>LOG(`Snapshot stored`,'S')).catch(e=>LOG(`Snapshot not stored ${e}`,'W'))
+
     
+
+    //The same with no-fulfilled buffers
     let buf=[],areas=['a','e']
 
     areas.forEach(area=>
@@ -578,8 +586,10 @@ export let N={
         
         await EXPORT_NEWS(configs.TOPICS,SNAPSHOT[`${type}_TOPICS_CONTROL`],SNAPSHOT[`EXPORT_${type}_NEWS`].SEND,configs.MAX_BUFS_PER_TOPIC,newsDB,configs.SCOPE,route)
 
+        //Start new cycle
         global[prop]=setTimeout(()=>N.EXPORT_NEWS_START(type,newsDB,route),configs.PERIOD)
     
+        //If we need to stop export processes
         !CONFIG.TRIGGERS[`EXPORT_${type}_NEWS`]&&clearTimeout(global[prop])
            
     },
@@ -620,9 +630,9 @@ export let N={
     //0-type(a or e) 1-topic 2-id of newsgroup 3-reference
     setOneSrc:a=>a.writeHeader('Access-Control-Allow-Origin','*').onAborted(()=>a.aborted=true).onData(async v=>{
     
-        let b=await BODY(v,CONFIG.PAYLOAD_SIZE)
+        let body=await BODY(v,CONFIG.PAYLOAD_SIZE)
         
-        if(!b.d){
+        if(!body.d){
             
             !a.aborted&&a.end('No data')
             
@@ -630,12 +640,12 @@ export let N={
         
         }
         
-        let [type,topic,bufId] = b.d,
+        let [type,topic,bufId] = body.d,
         
             ref=type==='a'?'ANY':'EMP'
         
         
-        if(CONFIG.TRIGGERS.SET_ONE_SRC&&(type==='a'||type==='e')&&news[type][topic]&&await ACC_CONTROL(b.c,JSON.stringify(b.d),b.f,1,PRIVIL)){
+        if(CONFIG.TRIGGERS.SET_ONE_SRC&&(type==='a'||type==='e')&&news[type][topic]&&await ACC_CONTROL(body.c,JSON.stringify(body.d),body.f,1,PRIVIL)){
         
             news[type][topic].get(SNAPSHOT[ref+'_TOPICS_CONTROL'][topic][bufId]).then(v=>{
             
@@ -643,7 +653,7 @@ export let N={
 
                 if(v.length<CONFIG[ref+'_NEWS_BUF_LEN']+CONFIG.MAX_SET_ONE_SRC){
             
-                    v.push(b.d[3])
+                    v.push(body.d[3])
                 
                     news[type][topic].put(SNAPSHOT[ref+'_TOPICS_CONTROL'][topic][bufId],JSON.stringify(v)).then(()=>cache.set(type+topic+bufId))
                     
@@ -663,17 +673,20 @@ export let N={
     //Сюда присылать MSG вида {c:'2dsafsd',d:'адрес пригласившего',f:'finalHash созданный SIDом пригласившего'}
     entryNewbies:a=>a.writeHeader('Access-Control-Allow-Origin','*').onAborted(()=>a.aborted=true).onData(async v=>{
             
-        let b=await BODY(v,CONFIG.MAX_PAYLOAD_SIZE)
+        let body=await BODY(v,CONFIG.MAX_PAYLOAD_SIZE)
 
-        if(CONFIG.TRIGGERS.ENTRY_NEWBIES&&typeof b.c==='string'&&typeof b.d==='string'&&typeof b.f==='string'&&CONFIG.ENTRY_NEWBIES!=='3'){
+        if(CONFIG.TRIGGERS.ENTRY_NEWBIES&&typeof body.c==='string'&&typeof body.d==='string'&&typeof body.f==='string'&&CONFIG.ENTRY_NEWBIES!=='3'){
 
-            let member=await ACCOUNTS.get(b.d),newb=await ACCOUNTS.get(b.c)
+            let member=await ACCOUNTS.get(body.d),
+            
+                newb=await ACCOUNTS.get(body.c)
 
-            if(!newb.R.includes('E')&&HMAC(b.c,member.S,'',b.f)&&(CONFIG.ENTRY_NEWBIE==='1'||CONFIG.ENTRY_NEWBIES==='2'&&INV2.test(member.R))){
+
+            if(!newb.R.includes('E')&&HMAC(body.c,member.S,'',body.f)&&(CONFIG.ENTRY_NEWBIE==='1'||CONFIG.ENTRY_NEWBIES==='2'&&INV2.test(member.R))){
                 
-                newb.R+='E'
+                newb.R+='E'//add newbie to empire
 
-                ACCOUNTS.set(b.c,newb)
+                ACCOUNTS.set(body.c,newb)
 
                 !a.aborted&&a.end('OK')
             

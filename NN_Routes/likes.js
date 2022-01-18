@@ -26,9 +26,9 @@ export let L={
     //Like  --->  News
     anyLikes:a=>a.writeHeader('Access-Control-Allow-Origin','*').onAborted(()=>{}).onData(async v=>{
 
-        let b=await BODY(v,CONFIG.PAYLOAD_SIZE)
+        let body=await BODY(v,CONFIG.PAYLOAD_SIZE)
         
-        likes.get(b.c).then(async v=>{
+        likes.get(body.c).then(async v=>{
             if(v>0){
                 //REALIZATION
             }
@@ -43,12 +43,12 @@ export let L={
 
     empLikes:a=>a.writeHeader('Access-Control-Allow-Origin','*').onAborted(()=>{}).onData(async v=>{
         
-        let b=await BODY(v,CONFIG.PAYLOAD_SIZE)
+        let body=await BODY(v,CONFIG.PAYLOAD_SIZE)
        
-        typeof b.c==='string'&&typeof b.f==='string'
+        typeof body.c==='string'&&typeof body.f==='string'
         ?
-        likes.get(b.c).then(async v=>{
-            if(v>0&&await ACC_CONTROL(b.c,JSON.stringify(b.d),b.f,1,1,PRIVIL)){
+        likes.get(body.c).then(async v=>{
+            if(v>0&&await ACC_CONTROL(body.c,JSON.stringify(body.d),body.f,1,1,PRIVIL)){
                 //REALIZATION
             }
             a.end()

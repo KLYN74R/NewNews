@@ -98,16 +98,16 @@ importData=(a,tag,db)=>{
             if(last){
                 
                 
-                let b=await PARSE_JSON(buf)
+                let body=await PARSE_JSON(buf)
     
-                if(typeof b.c==='string'&&importConfigs.SCOPE[b.c]&&typeof b.f==='string'&&snapPart.IMPORTED!==importConfigs.MAX_IMPORT){
+                if(typeof body.c==='string'&&importConfigs.SCOPE[body.c]&&typeof body.f==='string'&&snapPart.IMPORTED!==importConfigs.MAX_IMPORT){
     
                     let timestamp=new Date().getTime()
 
                     //If something wrong with integrity-deny data and send '0' without increasing nonce(another side also won't change nonce)
                     //This way we'll check and accept resources only in case of integrity(check via HMAC-BLAKE3)
                     
-                    if(!HMAC(JSON.stringify(b.d),importConfigs.SCOPE[b.c].sid,b.t,b.f) || (timestamp-b.t)/60000>5){
+                    if(!HMAC(JSON.stringify(body.d),importConfigs.SCOPE[body.c].sid,body.t,body.f) || (timestamp-body.t)/60000>5){
     
                         !a.aborted&&a.end('HMAC failed')
 
@@ -122,7 +122,7 @@ importData=(a,tag,db)=>{
                     //__________________________________________MAIN LOGIC__________________________________________
 
 
-                    let hashes=Object.keys(b.d).slice(0,importConfigs.MAX_IMPORT-snapPart.IMPORTED)
+                    let hashes=Object.keys(body.d).slice(0,importConfigs.MAX_IMPORT-snapPart.IMPORTED)
                 
 
                     hashes.forEach(hash=>
@@ -131,7 +131,7 @@ importData=(a,tag,db)=>{
 
                             e.notFound
                             ?
-                            db.put(hash,b.d[hash]).then(()=>snapPart.IMPORTED++).catch(e=>LOG(`Unable to save locally \x1b[36;1m${tag} -> ${hash}`,'W'))
+                            db.put(hash,body.d[hash]).then(()=>snapPart.IMPORTED++).catch(e=>LOG(`Unable to save locally \x1b[36;1m${tag} -> ${hash}`,'W'))
                             :
                             LOG(`Unable to save locally \x1b[36;1m${tag} -> ${hash}\n \x1b[31;1mReason:${e}`,'W')
 
@@ -156,7 +156,6 @@ FLUSH_CACHE=(cache,type,shouldStop,stopLabel)=>{
 
     LOG(`${type} cache is going to be flushed.Size is ———> ${cache.cache.size}`,'I')
 
-    console.log(cache.cache)
     
     
     let {FLUSH_LIMIT,TTL}=CONFIG.CACHES[type]
@@ -193,7 +192,7 @@ S={
 
     //To save more different links for sources of respectively news
     //MSG ---> {c:'2dtMmYHpLLb25l5LUktwFvIgQ5dhK54X4Mw0sEhdyAc=',d:['hash','extra_href'],f:'fullhash'}
-    stor1:a=>a.writeHeader('Access-Control-Allow-Origin','*').onAborted(()=>a.aborted=true).onData(async v=>{
+    moreLinks:a=>a.writeHeader('Access-Control-Allow-Origin','*').onAborted(()=>a.aborted=true).onData(async v=>{
 
         if(CONFIG.STORE1_PERM===SNAPSHOT.STORE1||!CONFIG.TRIGGERS.STORE1){
             
@@ -204,26 +203,26 @@ S={
         }
         
 
-        let b=await BODY(v,CONFIG.PAYLOAD_SIZE)
+        let body=await BODY(v,CONFIG.PAYLOAD_SIZE)
         
 
-        typeof b.c==='string' && typeof b.d?.[0]==='string' && typeof b.d[1]==='string'
+        typeof body.c==='string' && typeof body.d?.[0]==='string' && typeof body.d[1]==='string'
         &&
-        b.d[1][0]!=='{'//check if it isn't fullNews object
+        body.d[1][0]!=='{'//check if it isn't fullNews object
         &&
-        b.d[0].length===64 && b.d[1].length<=CONFIG.STORE1_HREF_LEN && await ACC_CONTROL(b.c,b.d[0]+b.d[1],b.f,1)
+        body.d[0].length===64 && body.d[1].length<=CONFIG.STORE1_HREF_LEN && await ACC_CONTROL(body.c,body.d[0]+body.d[1],body.f,1)
         ?
-        store.get(b.d[0]).then(v=>!a.aborted && a.end('Exists')).catch(e=>
+        store.get(body.d[0]).then(v=>!a.aborted && a.end('Exists')).catch(e=>
             
             e.notFound
             ?
-            store.put(b.d[0],b.d[1]).then(()=>{
+            store.put(body.d[0],body.d[1]).then(()=>{
                 
                 !a.aborted&&a.end('OK')
                 
                 SNAPSHOT.STORE1++
                 
-                CONFIG.EXPORT_STORE.HANDLE_EVEN_IF_STOP&&PUSH_STORE_CONTROL(b.d[0])
+                CONFIG.EXPORT_STORE.HANDLE_EVEN_IF_STOP&&PUSH_STORE_CONTROL(body.d[0])
             
             })
             :
@@ -241,9 +240,9 @@ S={
     //To save full news created by you or by someone from Information Empire
     //{d:{c:'2dtMmYHpLLb25l5LUktwFvIgQ5dhK54X4Mw0sEhdyAc=',i:'input+fultext',r:'refs and materials',s:'signature'}
     
-    stor2:a=>a.writeHeader('Access-Control-Allow-Origin','*').onAborted(()=>a.aborted=true).onData(async v=>{
+    fullnews:a=>a.writeHeader('Access-Control-Allow-Origin','*').onAborted(()=>a.aborted=true).onData(async v=>{
         
-        if(CONFIG.STORE2_PERM===SNAPSHOT.STORE2 || !CONFIG.TRIGGERS.STORE2){
+        if(CONFIG.FULLNEWS_MAX_NUMBER===SNAPSHOT.STORE2 || !CONFIG.TRIGGERS.FULLNEWS){
             
             !a.aborted&&a.end('Route is off or no more space')
             
@@ -252,19 +251,19 @@ S={
         }
         
         
-        let b=await BODY(v,CONFIG.EXTENDED_PAYLOAD_SIZE),fullnews,hash,json,
+        let body=await BODY(v,CONFIG.EXTENDED_PAYLOAD_SIZE),fullnews,hash,json,
         
 
 
         allow=
 
-        typeof b.d?.c==='string'&&typeof b.d.i==='string'&&typeof b.d.r==='string'&&typeof b.d.s==='string'
+        typeof body.d?.c==='string'&&typeof body.d.i==='string'&&typeof body.d.r==='string'&&typeof body.d.s==='string'
         &&
-        b.d.i.length<=CONFIG.STORE2_INPUT_LEN&&b.d.r.length<=CONFIG.STORE2_REFS_LEN
+        body.d.i.length<=CONFIG.FULL_NEWS_INPUT_MAX_SiZE&&body.d.r.length<=CONFIG.FULL_NEWS_REFS_MAX_SIZE
         &&
-        await ACC_CONTROL(b.d.c, b.d.i+b.d.r+b.d.s, b.f, 1, PRIVIL)
+        await ACC_CONTROL(body.d.c, body.d.i+body.d.r+body.d.s, body.f, 1, PRIVIL)
         &&
-        await VERIFY(b.d.i+b.d.r,b.d.s,b.d.c)//check the signature
+        await VERIFY(body.d.i+body.d.r,body.d.s,body.d.c)//check the signature
         
 
         
@@ -273,10 +272,10 @@ S={
             //Normalize object
             fullnews={
                 
-                c:b.d.c,//pubkey
-                i:b.d.i,
-                r:b.d.r,
-                s:b.d.s
+                c:body.d.c,//pubkey
+                i:body.d.i,
+                r:body.d.r,
+                s:body.d.s
 
             }
             

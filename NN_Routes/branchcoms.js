@@ -193,15 +193,15 @@ export let B={
         }
 
 
-        let b=await BODY(v,CONFIG.PAYLOAD_SIZE)
+        let body=await BODY(v,CONFIG.PAYLOAD_SIZE)
         
-        if(typeof b.c==='string'&&typeof b.d==='string'&&b.d.length===64&&typeof b.f==='string'){
+        if(typeof body.c==='string'&&typeof body.d==='string'&&body.d.length===64&&typeof body.f==='string'){
             
-            ACC_CONTROL(b.c,b.d,b.f,1,0,1).then(acc=>{
+            ACC_CONTROL(body.c,body.d,body.f,1,0,1).then(acc=>{
                 
                 if(acc){
 
-                    branchcom.get(b.d).then(v=>!a.aborted&&a.end('Exists')).catch(e=>{
+                    branchcom.get(body.d).then(v=>!a.aborted&&a.end('Exists')).catch(e=>{
                         
                         if(e.notFound){
                         
@@ -209,7 +209,7 @@ export let B={
                     
                             if(PRIVIL.test(acc.R)){
 
-                                branchcom.put(b.d,JSON.stringify([])).then(()=>
+                                branchcom.put(body.d,JSON.stringify([])).then(()=>
                                 
                                     (!a.aborted && a.end('OK') , SNAPSHOT.BCQ++ )
                                     
@@ -217,11 +217,11 @@ export let B={
 
                             }
                     
-                            else store.get(b.d).then(v=>
+                            else store.get(body.d).then(v=>
                                 
                                     v[0]==='{'//means that it's fullnews
                                     ?
-                                    branchcom.put(b.d,JSON.stringify([])).then(()=>(!a.aborted&&a.end('OK'),SNAPSHOT.BCQ++))
+                                    branchcom.put(body.d,JSON.stringify([])).then(()=>(!a.aborted&&a.end('OK'),SNAPSHOT.BCQ++))
                                     :
                                     !a.aborted&&a.end('No such fullnews on this chain')
         
@@ -231,7 +231,7 @@ export let B={
                             //Тут такая проверка,чтоб BRANCHCOMS_CONTROL был размером как BUF_MAX_LEN чтоб дальше не было проблем с размером буфера
                             //Check length not to overflow buffer of control
             
-                            CONFIG.EXPORT_BRANCHCOMS.HANDLE_EVEN_IF_STOP&&PUSH_BRANCHCOMS_CONTROL(b.d)
+                            CONFIG.EXPORT_BRANCHCOMS.HANDLE_EVEN_IF_STOP&&PUSH_BRANCHCOMS_CONTROL(body.d)
                     
                         }else !a.aborted&&a.end('DB error')    
                         
@@ -260,25 +260,25 @@ export let B={
         
         }
 
-        let b=await BODY(v,CONFIG.PAYLOAD_SIZE),allow
+        let body=await BODY(v,CONFIG.PAYLOAD_SIZE),allow
 
 
         allow=
 
         //Check types and validate account
-        typeof b.f==='string'&&typeof b.d?.[0]==='string'&&b.d[0].length===64
+        typeof body.f==='string'&&typeof body.d?.[0]==='string'&&body.d[0].length===64
         &&
-        typeof b.d[1]?.c==='string'&&typeof b.d[1].t==='string'&&b.d[1].t.length<=CONFIG.COMMENT_LEN
+        typeof body.d[1]?.c==='string'&&typeof body.d[1].t==='string'&&body.d[1].t.length<=CONFIG.COMMENT_LEN
         &&
-        typeof b.d[1].s==='string'
+        typeof body.d[1].s==='string'
         &&
-        await ACC_CONTROL(b.d[1].c,b.d[1].t+b.d[1].s,b.f,1)
+        await ACC_CONTROL(body.d[1].c,body.d[1].t+body.d[1].s,body.f,1)
         &&
-        await VERIFY(b.d[1].t,b.d[1].s,b.d[1].c)
+        await VERIFY(body.d[1].t,body.d[1].s,body.d[1].c)
 
         if(allow){
 
-            branchcom.get(b.d[0]).then(bc=>{
+            branchcom.get(body.d[0]).then(bc=>{
 
                 bc=JSON.parse(bc)
 
@@ -286,15 +286,15 @@ export let B={
                 
                     bc.push({
                         
-                        c:b.d[1].c,
+                        c:body.d[1].c,
                         
-                        t:b.d[1].t,
+                        t:body.d[1].t,
                         
-                        s:b.d[1].s
+                        s:body.d[1].s
                     
                     })
                     
-                    branchcom.put(b.d[0],JSON.stringify(bc))
+                    branchcom.put(body.d[0],JSON.stringify(bc))
                     
                         .then(()=>
                         

@@ -60,7 +60,7 @@
 
         "GET_STORE":1,
         "STORE1":1,
-        "STORE2":1,
+        "FULLNEWS":1,
         
         "GET_ANY_NEWS":1,
         "GET_EMP_NEWS":1,
@@ -123,8 +123,8 @@
         "ANY_NEWS_PREV_HREF_LEN":400,
         "EMP_NEWS_PREV_HREF_LEN":400,
         "STORE1_HREF_LEN":100,
-        "STORE2_INPUT_LEN":800,
-        "STORE2_REFS_LEN":500,
+        "FULL_NEWS_INPUT_MAX_SiZE":800,
+        "FULL_NEWS_REFS_MAX_SIZE":500,
         "GET_ANY_NEWS":"^newnews.com,westbc.io,nnbrother.ua",
         "SEND_ANY_NEWS":"^newnews.com,westbc.io,nnbrother.ua",
         "GET_IE_NEWS":"^newnews.com,westbc.io,nnbrother.ua",

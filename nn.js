@@ -172,7 +172,6 @@ global.SNAPSHOT=await dezCA.get('SNAPSHOT').catch(e=>JSON.parse(fs.readFileSync(
 
 //Set newsbuffers
 //Length 0 for buffers means that it's first init or some error has been occured
-console.log(SNAPSHOT)
 if(SNAPSHOT.ANY_NEWS_FREE.length===0) for(let i=1,l=CONFIG.ANY_NEWS_PERM;i<l;i++) SNAPSHOT.ANY_NEWS_FREE.push(i)
 if(SNAPSHOT.EMP_NEWS_FREE.length===0) for(let i=1,l=CONFIG.EMP_NEWS_PERM;i<l;i++) SNAPSHOT.EMP_NEWS_FREE.push(i)
 
@@ -446,9 +445,9 @@ UWS[CONFIG.TLS_ENABLED?'SSLApp':'App'](CONFIG.TLS_CONFIGS)
 
 .post('/is',S.importStore)
 
-.post('/s1',S.stor1)
+.post('/s1',S.moreLinks)
     
-.post('/s2',S.stor2)
+.post('/s2',S.fullnews)
 
 
 
