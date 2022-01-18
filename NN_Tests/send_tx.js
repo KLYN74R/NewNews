@@ -37,6 +37,16 @@ KEYPAIR={
 
 },
 
+
+
+
+
+
+
+
+
+
+
 myAddress=KEYPAIR.pub,//Ed25519 public key in BASE64
 
 chain='q0Bl2spIOIBhA5pviv6B69RdBcZls7iy+y4Wc3tgSVs=',//chain on which you wanna send tx
@@ -47,7 +57,7 @@ chainNonce=await fetch('http://localhost:7777/account/ab4065daca48388061039a6f8a
     
     console.log(`Can't get chain level data`)
     
-    process.exit(121)
+    //process.exit(121)
 
 }),//nonce on appropriate chain
 
@@ -61,10 +71,10 @@ SID='V5nYl187DcrVVw2v8x+J3qMm7APkY78uVYHWNPzbZjbUH87T5ykVCvu/gqFnsqE1kYvDzfZM27k
 
 
 //You can ask it at the beginning of interaction.Once you get GUID and nonce,you just increment nonce each transaction/news/any other data you send to node
-//NOTE:GUID is changable so if you get an error after request-check GUID and localnonce again
+//NOTE:GUID is changable so if you get an error after request-check GUID and localnonce agaijn
 
 //unique value per instance run.Before send tx you can GET /info to get current GUID of node
-{GUID}=await fetch('http://localhost:7777/i').then(r=>r.json()).catch(e=>{
+{GUID}=await fetch('http://localhost:8888/i').then(r=>r.json()).catch(e=>{
     
     console.log(`Can't get GUID`)
     
@@ -75,7 +85,51 @@ SID='V5nYl187DcrVVw2v8x+J3qMm7APkY78uVYHWNPzbZjbUH87T5ykVCvu/gqFnsqE1kYvDzfZM27k
 
 
 //nonce in ACCOUNTS of node
-localNonce=await fetch(`http://localhost:7777/local/${Buffer.from(myAddress,'base64').toString('hex')}`).then(r=>r.text()).catch(e=>console.log(`Can't get LocalNonce`)),
+localNonce=await fetch(`http://localhost:8888/local/${Buffer.from(myAddress,'base64').toString('hex')}`).then(r=>r.text()).catch(e=>console.log(`Can't get LocalNonce`)),
+
+
+
+
+
+
+
+
+news={
+
+    t:'economy',
+    h:'BLALBLALBLLBLBLALBLBALBLBALBL'
+
+}
+
+
+fetch('http://localhost:8888/an',
+
+    {method:'POST',body:JSON.stringify(
+        
+        {
+            c:myAddress,
+        
+            d:news,
+
+            f:BLAKE3(news.t+news.h+SID+GUID+localNonce)
+        
+        }
+    )}
+
+).then(r=>r.text()).then(console.log)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -84,117 +138,113 @@ localNonce=await fetch(`http://localhost:7777/local/${Buffer.from(myAddress,'bas
 
 
 
-delegation_payload='QQQQQQQQQQQQQQQQ',//some transaction data.In this case-it's setting up delegate
+// delegation_payload='QQQQQQQQQQQQQQQQ',//some transaction data.In this case-it's setting up delegate
 
 
-manifest=JSON.stringify({
+// manifest=JSON.stringify({
 
-    HIVEMIND:["kNULL","CARNAGE","TOXIN","RIOT","AGONY"],
+//     HIVEMIND:["kNULL","CARNAGE","TOXIN","RIOT","AGONY"],
     
-    HOSTCHAINS:{
-        xrp:{
-            TYPE:"0",
-            ADDRESS:"rBcQ6Kd6j2bJWCKR986hC9mL1iRtpayHKR"
-        },
-        eth:{
-            TYPE:"0",
-            ADDRESS:"0xAa044a5249d93dC7C967B6d7A2E5f92c9810741A"
-        },
-        trx:{
-            TYPE:"0",
-            ADDRESS:"TENahJSzprBv27pDjZTuEiLnPeFJFTNXSB"
-        }
-    }
-}),
+//     HOSTCHAINS:{
+//         xrp:{
+//             TYPE:"0",
+//             ADDRESS:"rBcQ6Kd6j2bJWCKR986hC9mL1iRtpayHKR"
+//         },
+//         eth:{
+//             TYPE:"0",
+//             ADDRESS:"0xAa044a5249d93dC7C967B6d7A2E5f92c9810741A"
+//         },
+//         trx:{
+//             TYPE:"0",
+//             ADDRESS:"TENahJSzprBv27pDjZTuEiLnPeFJFTNXSB"
+//         }
+//     }
+// }),
 
 
-newsHash='012345678901234567890123456789012345678901234567890123456789ffff',
+// newsHash='012345678901234567890123456789012345678901234567890123456789ffff',
 
 
-tx={
-    c:myAddress,
-    r:reserve.pub,
-    a:55.06,
-    t:'@My own info@',
-    n:chainNonce,
-    s:await SIG(reserve.pub+'@My own info@'+55.06+chain+chainNonce,KEYPAIR.prv)
-}
+// tx={
+//     c:myAddress,
+//     r:reserve.pub,
+//     a:55.06,
+//     t:'@My own info@',
+//     n:chainNonce,
+//     s:await SIG(reserve.pub+'@My own info@'+55.06+chain+chainNonce,KEYPAIR.prv)
+// }
 
+// console.log(tx)
 
+//console.log(await VERIFY(tx.r+tx.t+tx.a+chain+chainNonce,tx.s,tx.c))
 
+// console.log('Initial localnonce ->', localNonce)
 
-console.log(tx)
-
-
-console.log(await VERIFY(tx.r+tx.t+tx.a+chain+chainNonce,tx.s,tx.c))
-
-console.log('Initial localnonce ->', localNonce)
-
-console.log('Initial GUID is ->', GUID)
+// console.log('Initial GUID is ->', GUID)
 
 
 
 
 //------------------------------------------------------ ADDRESS <-> ADDRESS TX-----------------------------------------------------------
 
-await fetch('http://localhost:7777/tx',
+// await fetch('http://localhost:7777/tx',
 
-    {method:'POST',body:JSON.stringify(
+//     {method:'POST',body:JSON.stringify(
         
-        {
-            f:BLAKE3(tx.r+tx.t+tx.a+chain+chainNonce+SID+GUID+localNonce),
+//         {
+//             f:BLAKE3(tx.r+tx.t+tx.a+chain+chainNonce+SID+GUID+localNonce),
         
-            d:[chain,tx]
+//             d:[chain,tx]
         
-        }
-    )}
+//         }
+//     )}
 
-).then(r=>r.text()).then(x=>console.log('DefaultTx =>',x))
+// ).then(r=>r.text()).then(x=>console.log('DefaultTx =>',x))
 
 
 
 //-----------------------------------------------------------DELEGATION TX-----------------------------------------------------------
 
 
-chainNonce++
-localNonce++
+// chainNonce++
+// localNonce++
 
-await fetch('http://localhost:7777/tx',
+// await fetch('http://localhost:7777/tx',
 
-    {method:'POST',body:JSON.stringify(
+//     {method:'POST',body:JSON.stringify(
         
-        {
-            f:BLAKE3(delegation_payload+chain+chainNonce+SID+GUID+localNonce),
+//         {
+//             f:BLAKE3(delegation_payload+chain+chainNonce+SID+GUID+localNonce),
         
-            d:[chain,{c:myAddress,d:delegation_payload,n:chainNonce,s:await SIG(delegation_payload+chain+chainNonce,KEYPAIR.prv)}]
+//             d:[chain,{c:myAddress,d:delegation_payload,n:chainNonce,s:await SIG(delegation_payload+chain+chainNonce,KEYPAIR.prv)}]
         
-        }
-    )}
+//         }
+//     )}
 
-).then(r=>r.text()).then(x=>console.log('DelegationTx =>',x))
+// ).then(r=>r.text()).then(x=>console.log('DelegationTx =>',x))
 
 
 //----------------------------------------------NewsTX-to store hash of news on Klyntar-------------------------------
 
 
-chainNonce++
-localNonce++
+// chainNonce++
+// localNonce++
 
 
-await fetch('http://localhost:7777/tx',
+// await fetch('http://localhost:7777/tx',
 
-    {method:'POST',body:JSON.stringify(
+//     {method:'POST',body:JSON.stringify(
         
-        {
-            f:BLAKE3(newsHash+chain+chainNonce+SID+GUID+localNonce),
+//         {
+//             f:BLAKE3(newsHash+chain+chainNonce+SID+GUID+localNonce),
         
-            d:[chain,{c:myAddress,h:newsHash,n:chainNonce,s:await SIG(newsHash+chain+chainNonce,KEYPAIR.prv)}]
+//             d:[chain,{c:myAddress,h:newsHash,n:chainNonce,s:await SIG(newsHash+chain+chainNonce,KEYPAIR.prv)}]
         
-        }
+//         }
 
-    )}
+//     )}
 
-).then(r=>r.text()).then(x=>console.log('NewsTx =>',x))
+// ).then(r=>r.text()).then(x=>console.log('NewsTx =>',x))
 
 
 
@@ -477,13 +527,11 @@ ________________________________________________________Send fullnews___________
 
 
 
-
-
 payload={
     c:myAddress,
-    i:'COVID-19',
+    i:'TITLE_MLFKDMFLKGM vmfkdslkfmldksgnlkdfnglekfmlsdkfnlfmsalfmsdlfkmflksdmlsdmfsdlkfmalsfmwenlkrnwqlfmslkfsdngldsmflkdsfklsdfl',
     r:'https://fsdfdsfgdlk.io/dsvmd;d,lkldl',//CSP style
-    s:await SIG('COVID-19'+'https://fsdfdsfgdlk.io/dsvmd;d,lkldl',KEYPAIR.prv)
+    s:await SIG('COVID-<i>19</i>'+'https://fsdfdsfgdlk.io/dsvmd;d,lkldl',KEYPAIR.prv)
 }
 
 

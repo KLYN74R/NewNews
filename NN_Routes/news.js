@@ -1,4 +1,4 @@
-import {PRIVIL,ACC_CONTROL,BODY,HMAC,SEND,INV2,SAFE_ADD,PARSE_JSON,LOG} from '../NN_Space/utils.js'
+import {PRIVIL,ACC_CONTROL,BODY,HMAC,SEND,INV2,SAFE_ADD,PARSE_JSON,LOG, PATH_RESOLVE} from '../NN_Space/utils.js'
 
 import CACHE from '../NN_Essences/primitivecache.js'
 
@@ -7,6 +7,8 @@ import MSG from '../NN_Essences/msg.js'
 import {FLUSH_CACHE} from './store.js'
 
 import {news} from '../nn.js'
+
+import fs from 'fs'
 
 
 
@@ -49,7 +51,18 @@ let
                 
                     return cache.get(id)
             
-                }).catch(e=>cache.get(src+topic+'C'))
+                }).catch(e=>
+                    
+                    cache.get(src+topic+'C')//try to get from cache if it's still not flushed
+                    ||
+                    (
+                        cache.set(src+topic+'C',JSON.stringify(NEWSBUF[src][topic])),//reload cache
+
+                        cache.get(src+topic+'C')//...and response
+                    
+                    )
+                    
+                )
             
             
             !a.aborted && a.end(send)
@@ -83,15 +96,15 @@ let
             //If no free space or route's trigger is off-immediately response
             if(!(freeSpace||CONFIG.TRIGGERS[`SEND_${anyOrEmpire==='a'?'ANY':'EMP'}_NEWS`])) a.end('Route is off')
     
-            else if(NEWSBUF[anyOrEmpire][b.d.t] && freeSpace  &&  b.d.h.length<=CONFIG[label+'PREV_HREF_LEN']  &&  await ACC_CONTROL(b.c,b.d.t+b.d.h,b.f,1,role)){
+            else if(NEWSBUF[anyOrEmpire][b.d.t]  &&  freeSpace  &&  b.d.h.length<=CONFIG[label+'PREV_HREF_LEN']  &&  await ACC_CONTROL(b.c,b.d.t+b.d.h,b.f,1,role)){
                 
                 NEWSBUF[anyOrEmpire][b.d.t].push(b.d.h)
 
-                !a.aborted&&a.end('OK')
+                !a.aborted && a.end('OK')
 
                 cache.set(anyOrEmpire+b.d.t+'C',JSON.stringify(NEWSBUF[anyOrEmpire][b.d.t]))
     
-                if(free[0]&&NEWSBUF[anyOrEmpire][b.d.t].length===bufLen){
+                if(free[0] && NEWSBUF[anyOrEmpire][b.d.t].length===bufLen){
                     
                     let v=free.shift()
                                             
@@ -117,9 +130,12 @@ let
 
         let total=0,buf=Buffer.alloc(0),ref=type
 
-            type=(type==='a'?'ANY':'EMP')+'_NEWS_',
+            type=(type==='a'?'ANY':'EMP')+'_NEWS_'
         
-            free=SNAPSHOT[type+'FREE'],bufSize=CONFIG[type+'BUF_LEN']
+        
+        let free=SNAPSHOT[type+'FREE'],
+        
+            bufSize=CONFIG[type+'BUF_LEN']
 
 
         
@@ -398,9 +414,18 @@ let
     }
 
 
+    //,Function to store buffer time by time
 
 
-CONFIG.CACHES.NEWS.TTL!=0&&setTimeout(()=>FLUSH_CACHE(cache,'NEWS','STOP_FLUSH_NEWS_CACHE','CLEARTIMEOUT_NEWS'),CONFIG.CACHES.NEWS.DELAY)
+
+
+CONFIG.CACHES.NEWS.TTL!=0
+&&
+setTimeout(()=>
+
+    FLUSH_CACHE(cache,'NEWS','STOP_FLUSH_NEWS_CACHE','CLEARTIMEOUT_NEWS'),CONFIG.CACHES.NEWS.DELAY
+    
+)
 
 
 
@@ -411,6 +436,118 @@ CONFIG.EMPIRE.START
 CONFIG.EMPIRE.TOPICS.forEach(topic=>NEWSBUF.e[topic]=[])
 :
 NEWSBUF.e={politics:[],sport:[],economy:[],tech:[],other:[],future:[],showbiz:[],society:[],nature:[]}
+
+
+
+
+//And load caches if it's possible
+let buf=[],areas=['a','e']
+
+areas.forEach(area=>
+    
+    Object.keys(NEWSBUF[area]).forEach(
+    
+        category => buf.push(
+            
+            news[area][category].get('BUFFER').then(
+                
+                stored => {
+                    
+                    NEWSBUF[area][category] = JSON.parse(stored)
+
+                    LOG(`Cache \x1b[36;1m[${area}] -> [${category}]\x1b[32;1m loaded (size:${NEWSBUF[area][category].length})`,'S')
+
+                    cache.set(area+category+'C',stored)//to make available to see instantly
+                
+                }
+                
+            ).catch(e=>LOG(`Cache \x1b[36;1m[${area}] -> [${category}]\u001b[38;5;3m not found`,'W'))
+            
+        )
+    
+    )
+            
+)
+
+await Promise.all(buf.splice(0))
+
+
+
+
+//*********************** SET HANDLERS ON USEFUL SIGNALS ************************
+
+
+
+
+let graceful=async()=>{
+    
+    console.log('\n')
+
+    LOG('NewNews termination has been initiated.Keep waiting...','I')
+
+    //Probably stop logs on this step
+    LOG(fs.readFileSync(PATH_RESOLVE('/images/custom/termination.txt')).toString(),'W')    
+    
+    let buf=[],areas=['a','e']
+
+    areas.forEach(area=>
+        
+        Object.keys(NEWSBUF[area]).forEach(
+        
+            category => buf.push(
+                
+                news[area][category].put('BUFFER',JSON.stringify(NEWSBUF[area][category])).then(
+                    
+                    () => LOG(`Cache \x1b[36;1m[${area}] -> [${category}]\x1b[32;1m stored (size:${NEWSBUF[area][category].length})`,'S')
+                    
+                ).catch(e=>LOG(`Cache \x1b[36;1m[${area}] -> [${category}]\u001b[38;5;3m not stored ${e}`,'W'))
+                
+            )
+        
+        )
+                
+    )
+    
+    await Promise.all(buf.splice(0))
+
+    console.log('\n')
+
+    LOG('Node was gracefully stopped','I')
+        
+    process.exit(0)
+
+}
+
+
+
+//Define listeners to safely stop the node
+process.on('SIGTERM',graceful)
+process.on('SIGINT',graceful)
+process.on('SIGHUP',graceful)
+
+
+//************************ END SUB ************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -156,6 +156,7 @@ FLUSH_CACHE=(cache,type,shouldStop,stopLabel)=>{
 
     LOG(`${type} cache is going to be flushed.Size is ———> ${cache.cache.size}`,'I')
 
+    console.log(cache.cache)
     
     
     let {FLUSH_LIMIT,TTL}=CONFIG.CACHES[type]
@@ -210,7 +211,7 @@ S={
         &&
         b.d[1][0]!=='{'//check if it isn't fullNews object
         &&
-        b.d[0].length===64&&b.d[1].length<=CONFIG.STORE1_HREF_LEN&&await ACC_CONTROL(b.c,b.d[0]+b.d[1],b.f,1)
+        b.d[0].length===64 && b.d[1].length<=CONFIG.STORE1_HREF_LEN && await ACC_CONTROL(b.c,b.d[0]+b.d[1],b.f,1)
         ?
         store.get(b.d[0]).then(v=>!a.aborted && a.end('Exists')).catch(e=>
             
@@ -272,7 +273,7 @@ S={
             //Normalize object
             fullnews={
                 
-                c:b.d.c,
+                c:b.d.c,//pubkey
                 i:b.d.i,
                 r:b.d.r,
                 s:b.d.s

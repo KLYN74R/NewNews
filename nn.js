@@ -146,49 +146,6 @@ fs.readdirSync(PATH_RESOLVE('configs')).forEach(file=>
 )
 
 
-//*********************** SET HANDLERS ON USEFUL SIGNALS ************************
-
-
-let graceful=()=>{
-    
-    SIG_SIGNAL=true
-
-
-    console.log('\n')
-
-    LOG('NewNews stop has been initiated.Keep waiting...','I')
-
-    //Probably stop logs on this step
-    LOG(fs.readFileSync(PATH_RESOLVE('images/custom/termination.txt')).toString(),'W')    
-
-
-    setInterval(()=>{
-
-        //Each subprocess in each symbiote must be stopped
-        if(Object.values(SIG_PROCESS).every(chain=>Object.values(chain).every(x=>x))){
-
-            console.log('\n')
-
-            LOG('Node was gracefully stopped','I')
-        
-            process.exit(0)
-    
-        }
-
-    },1000)
-
-}
-
-
-
-//Define listeners to safely stop the node
-process.on('SIGTERM',graceful)
-process.on('SIGINT',graceful)
-process.on('SIGHUP',graceful)
-
-
-//************************ END SUB ************************
-
 
 
 //________________________________________________SHARED RESOURCES______________________________________________
@@ -204,10 +161,6 @@ global.ACCOUNTS=new AdvancedCache(CONFIG.CACHES.ACCOUNTS.SIZE,space)//quick acce
 
 //Load last snapshot file
 global.SNAPSHOT=await dezCA.get('SNAPSHOT').catch(e=>JSON.parse(fs.readFileSync(PATH_RESOLVE('emptyshot.json'))))//if it's first time-than load empty file
-
-global.SIG_SIGNAL=false
-
-global.SIG_PROCESS={}
 
 
 
