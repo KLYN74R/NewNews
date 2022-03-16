@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/KLYN74R/NewNews#readme",
   "dependencies": {
+    "base-58": "^0.0.1",
     "blake3-wasm": "^2.1.5",
     "chalk-animation": "^1.6.0",
     "cli-spinners": "^2.6.1",

@@ -4,6 +4,8 @@ import readline from 'readline'
 
 import fetch from 'node-fetch'
 
+import Base58 from 'base-58'
+
 import c from 'crypto'
 
 
@@ -81,6 +83,7 @@ CHAIN_LABEL=chain=>CONFIG.ALIASES[chain]||chain,
 
 
 
+
 /**# Verification
  * 
  * @param {string} data UTF-8 data(mostly it's BLAKE3 hashes)
@@ -91,14 +94,13 @@ CHAIN_LABEL=chain=>CONFIG.ALIASES[chain]||chain,
 VERIFY=(data,sig,pub)=>new Promise((resolve,reject)=>
 
     //Add mandatory prefix and postfix to pubkey
-    c.verify(null,data,'-----BEGIN PUBLIC KEY-----\n'+'MCowBQYDK2VwAyEA'+pub+'\n-----END PUBLIC KEY-----',Buffer.from(sig,'base64'),(e,res)=>
-    
-        e?reject(false):resolve(res)
-    
+    c.verify(null,data,'-----BEGIN PUBLIC KEY-----\n'+Buffer.from(Base58.decode('GfHq2tTVk9z4eXgy'+pub)).toString('base64')+'\n-----END PUBLIC KEY-----',Buffer.from(sig,'base64'),(err,res)=>
+
+        err?reject(err):resolve(res)
+
     )
 
-).catch(e=>false),
-
+).catch(e=>e),
 
 
 
@@ -127,7 +129,7 @@ VERIFY=(data,sig,pub)=>new Promise((resolve,reject)=>
 SIG=(data,prv)=>new Promise((resolve,reject)=>
 
     c.sign(null,Buffer.from(data),'-----BEGIN PRIVATE KEY-----\n'+prv+'\n-----END PRIVATE KEY-----',(e,sig)=>
-    
+ 
         e?reject(''):resolve(sig.toString('base64'))
 
     )

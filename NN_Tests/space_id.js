@@ -12,6 +12,9 @@
  * 
  *  EHYLgeLygJM21grIVDPhPgXZiTBF1xvl5p7lOapZ534= -> 2OuloLXdi7oO+L9/DREfkFys2IwRZRxtKf2ppM2b1h3f4hn6RS7bKcSHxWPF7sjkryyGIc6Y4RiQaRLEC25a7w==
  * 
+ *  RqtrnrLAdxpUkjqKS42RKbgN1ryXad3NeJrPTBZpdyVL -> JPNRSzUwZRFdeq1TLzbKXooohc7nLSUjtud2ta2R5PhJ/FRLI/6saBYl8wcMOAsNeHoTF65H3Xdd71CrprfarQ==
+ *  FASj1powx5qF1J6MRmx1PB7NQp5mENYEukhyfaWoqzL9 -> V57Ad2RKlIMlGDcesnUH532kXDQ/uGSAKQh4EpeCd1V0jCA52a6c02dYAcazBvPRk9Xuc8IIigJznn77pinrDw==
+ * 
  */
 
 
@@ -26,14 +29,20 @@ import fetch from 'node-fetch'
 //_________________________________________________________VALUES & FUNCTIONS POOL_________________________________________________________
 
 
-let {GUID}=await fetch('http://localhost:8888/i').then(r=>r.json()).catch(e=>console.log(`Can't get GUID`)),
+let {GUID}=await fetch('http://localhost:7777/i').then(r=>r.json()).catch(e=>console.log(`Can't get GUID`)),
 
+
+// KES={
+//     pub: 'EHYLgeLygJM21grIVDPhPgXZiTBF1xvl5p7lOapZ534=',
+//     prv: 'MC4CAQAwBQYDK2VwBCIEIKN4J4SGoeRJuZG3bisJbSQFmqSG7XC0HFqnbbqGLX3Q'
+// },
 
 KES={
-    pub: 'EHYLgeLygJM21grIVDPhPgXZiTBF1xvl5p7lOapZ534=',
-    prv: 'MC4CAQAwBQYDK2VwBCIEIKN4J4SGoeRJuZG3bisJbSQFmqSG7XC0HFqnbbqGLX3Q'
-},
 
+  pub: 'DJBTwMSwyw/Zv3ct3cO83qFc6xWfWmd6+Rpfmy1rJho=',
+  prv: 'MC4CAQAwBQYDK2VwBCIEICwEjxQThyf3yfw+F9L4SRGcu/LgXrgppd1wb5PCIY6k'
+
+},
 
 RSA={
     
@@ -140,7 +149,7 @@ console.log('SIG IS ->',sign)
 console.log('VERIFIED ->',await VERIFY(RSA.publicKey+GUID,sign,KES.pub))
 
 
-fetch(`http://localhost:8888/sd`,{method:'POST',body:JSON.stringify({c:KES.pub,d:[RSA.publicKey,sign,'somechain']})}).then(r=>r.text()).then(val=>{
+fetch(`http://localhost:7777/getsid`,{method:'POST',body:JSON.stringify({c:KES.pub,d:[RSA.publicKey,sign,'somechain']})}).then(r=>r.text()).then(val=>{
 
     console.log('RAW MESSAGE FROM NODE ->',val)
 
