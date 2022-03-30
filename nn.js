@@ -30,6 +30,11 @@ global.__dirname = await import('path').then(async mod=>
 )
 
 
+
+!fs.existsSync(PATH_RESOLVE('M')) && fs.mkdirSync(PATH_RESOLVE('M'))
+!fs.existsSync(PATH_RESOLVE('E')) && fs.mkdirSync(PATH_RESOLVE('E'))
+!fs.existsSync(PATH_RESOLVE('A')) && fs.mkdirSync(PATH_RESOLVE('A'))
+
 /*
 
 *TODO:Provide async formatting ratings due to fair addresses and liars
