@@ -108,5 +108,29 @@ then
 
 fi
 
+
+
+# █████╗ ██████╗  ██████╗ ██╗     ██╗      ██████╗ 
+#██╔══██╗██╔══██╗██╔═══██╗██║     ██║     ██╔═══██╗
+#███████║██████╔╝██║   ██║██║     ██║     ██║   ██║
+#██╔══██║██╔═══╝ ██║   ██║██║     ██║     ██║   ██║
+#██║  ██║██║     ╚██████╔╝███████╗███████╗╚██████╔╝
+#╚═╝  ╚═╝╚═╝      ╚═════╝ ╚══════╝╚══════╝ ╚═════╝ 
+
+
+#Install Apollo to the project directory
+git clone https://github.com/KLYN74R/Apollo.git APOLLO
+
+cd APOLLO
+
+pnpm install
+
+npm link
+
+cd ..
+
+
+
+
 #Run building addons script
 ./build.sh
